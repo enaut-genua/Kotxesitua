@@ -3,9 +3,9 @@ Kotxesitua kontrolatzen duen programa
 
 ## Proiektua eraiki
 Proiektua eraikitzeko beharrezko gauzak:
-	- CMake 3.16 edo berriagoa.
-	- arm-linux-gnueabihf-gcc (konpilazio gurutzaturako).
-	- GNU Make
+- CMake 3.16 edo berriagoa.
+- arm-linux-gnueabihf-gcc (konpilazio gurutzaturako).
+- GNU Make
 
 Behin horiek instalatuta exekutatu:
 ```
@@ -22,5 +22,5 @@ $ cmake -G "Unix Makefiles" -D KONP_GURUTZ=ON --build eraiki/ --config Release -
 $ cmake -G "Unix Makefiles" -D KONP_GURUTZ=OFF --build eraiki/ --config Release --target all ..
 
 # Azkenik proiektua eraiki
-make all
+$ make all
 ```
