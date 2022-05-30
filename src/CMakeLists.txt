@@ -8,6 +8,10 @@ target_sources(
 			input.c				# Kodea
 			kotxea.h			# Kodea
 			kotxea.c			# Kodea
+			$<$<BOOL:{KONP_GURUTZ}>:
+				hardware.h 			# Kodea
+				hardware.c			# Kodea
+			>
 )
 
 # Beste artxibo bat gehitu nahiko bagenio, idatzi artxibo horren izena eta yasta.

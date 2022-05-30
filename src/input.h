@@ -6,4 +6,5 @@
 bool input_init(void);
 bool input_destroy(void);
 
+
 #endif

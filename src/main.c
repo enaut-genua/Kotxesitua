@@ -2,16 +2,16 @@
 
 #include "input.h"
 #include "kotxea.h"
+#include "hardware.h"
 
 int main(void)
 {
-	input_init();
-	int c = 0;
+	while (input_init() == false)
+	{
+		ABISUA("Inputa ez da ondo konfiguratu, berriro saiatzen...");		
+	}
 
-#ifdef RASPBERRY
-	printf("Raspberry Pi!");
-	wiringPiSetup();
-#endif
+	int c = 0;
 
 	while ((c = getchar()) != 'e')
 	{
@@ -33,7 +33,11 @@ int main(void)
 		}
 	}
 
-	input_destroy();
 
+	while (input_destroy() == false)
+	{
+		ABISUA("Inputa ez da ondo borratu, berriro saiatzen...");	
+	}
+	
 	return EXIT_SUCCESS;
 }
