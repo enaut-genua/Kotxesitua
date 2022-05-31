@@ -7,10 +7,12 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <time.h>
 
 /* POSIX */
-#include <unistd.h>
+#include <poll.h>
 #include <termios.h>
+#include <unistd.h>
 
 /* Wiring Pi */
 #ifdef RASPBERRY
