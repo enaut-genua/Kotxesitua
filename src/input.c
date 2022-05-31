@@ -1,13 +1,15 @@
 #include "input.h"
 
-static struct termios TERM_ZAHARRA = { 0 };
+static struct termios TERM_ZAHARRA = {0};
 
 bool input_init(void)
 {
 	/* Lortu oraingo terminalaren konfigurazioa eta gorde. */
 	if (tcgetattr(STDIN_FILENO, &TERM_ZAHARRA) < 0)
 	{
-		perror("Errorea input_init() -> tcgetattr(): ");
+		char errore_mezua[BUF_SZ] = { '\0' };
+		snprintf(errore_mezua, BUF_SZ, "input_init() -> tcgetattr(): %s", strerror(errno));
+		ERROREA(errore_mezua);
 		return false;
 	}
 
@@ -23,7 +25,9 @@ bool input_init(void)
 	/* Konfigurazioa ezarri orain */
 	if (tcsetattr(STDIN_FILENO, TCSANOW, &aux_term) < 0)
 	{
-		perror("Errorea input_init() -> tcsetattr(): ");
+		char errore_mezua[BUF_SZ] = { '\0' };
+		snprintf(errore_mezua, BUF_SZ, "input_init() -> tcsetattr(): %s", strerror(errno));
+		ERROREA(errore_mezua);
 		return false;
 	}
 
@@ -35,9 +39,11 @@ bool input_destroy(void)
 	/* Aurreko konfigurazioa ezarri dena idatzi eta gero */
 	if (tcsetattr(STDIN_FILENO, TCSADRAIN, &TERM_ZAHARRA) < 0)
 	{
-		perror("Errorea input_destroy() -> tcgetattr(): ");
+		char errore_mezua[BUF_SZ] = { '\0' };
+		snprintf(errore_mezua, BUF_SZ, "input_init() -> tcgetattr(): %s", strerror(errno));
+		ERROREA(errore_mezua);
 		return false;
 	}
-	
+
 	return true;
 }

@@ -1,33 +1,126 @@
 #include "kotxea.h"
 
+
+#include "input.h"
 #ifdef RASPBERRY
 #include "hardware.h"
 #endif
 
-void kotxea_ezkerreko_motorra_mugitu(void)
+/* FUNTZIO PRIBATUAK */
+
+static void kotxea_ezkerreko_motorra_mugitu(void);
+static void kotxea_ezkerreko_motorra_gelditu(void);
+static void kotxea_eskubiko_motorra_mugitu(void);
+static void kotxea_eskubiko_motorra_gelditu(void);
+static void kotxea_bi_motorrak_mugitu(void);
+static void kotxea_gelditu(void);
+static PinEgoera kotxea_ezkerreko_ldr_irakurri(void);
+static PinEgoera kotxea_eskubiko_ldr_irakurri(void);
+
+
+void kotxea_urruneko_kontrola(void)
 {
+	while (input_init() == false)
+	{
+		ABISUA("Inputa ez da ondo konfiguratu, berriro saiatzen...\n");		
+	}
+
+	int c = 0;
+
+	while ((c = getchar()) != 'e')
+	{
+		switch (c)
+		{
+		case 'w':
+			kotxea_bi_motorrak_mugitu();
+			break;
+		case 'a':
+			// Ezkerrera
+			kotxea_eskubiko_motorra_mugitu();
+			break;
+		case 'd':
+			// Eskubira
+			kotxea_ezkerreko_motorra_mugitu();
+			break;
+		default:
+			kotxea_gelditu();
+			break;
+		}
+	}
+
+	OHARRA("Urruneko kontroletik ateratzen...");
+
+	while (input_destroy() == false)
+	{
+		ABISUA("Inputa ez da ondo borratu, berriro saiatzen...\n");	
+	}
+}
+
+void kotxea_marra_jarraitu(void)
+{
+	OHARRA("Marra bat jarraitzen...");
+	while (true)
+	{
+		if (kotxea_ezkerreko_ldr_irakurri() == Ezgaitu)
+		{
+			kotxea_ezkerreko_motorra_gelditu();
+		}
+		if (kotxea_eskubiko_ldr_irakurri() == Ezgaitu)
+		{
+			kotxea_eskubiko_motorra_gelditu();	
+		}
+		kotxea_bi_motorrak_mugitu();
+	}
+}
+
+/* FUNTZIO PRIBATUEN DEKLARAZIOA */
+
+static void kotxea_ezkerreko_motorra_mugitu(void)
+{
+	OHARRA("Ezkerreko motorra mugitzen...");
 #ifdef RASPBERRY
 	hardware_ezkerreko_motorra_piztu();
-#else
-	printf("Ezkerreko motorra mugitzen...\n");
 #endif
 }
 
-void kotxea_eskubiko_motorra_mugitu(void)
+static void kotxea_ezkerreko_motorra_gelditu(void)
 {
+	OHARRA("Ezkerreko motorra gelditu.");
+}
+
+static void kotxea_eskubiko_motorra_mugitu(void)
+{
+	OHARRA("Eskubiko motorra mugitzen...");
 #ifdef RASPBERRY
 	hardware_eskubiko_motorra_piztu();
-#else
-	printf("Eskubiko motorra mugitzen...\n");
 #endif
 }
 
-int kotxea_ezkerreko_ldr_irakurri(void)
+static void kotxea_eskubiko_motorra_gelditu(void)
 {
-	int sentsorearen_balioa = 0;
+	OHARRA("Eskubiko motorra gelditu.");
+}
+
+static void kotxea_bi_motorrak_mugitu(void)
+{
+	OHARRA("Bi motorrak batera mugitzen...");
+#ifdef RASPBERRY
+#endif
+}
+
+static void kotxea_gelditu(void)
+{
+	OHARRA("Kotxea geldirik.");
+#ifdef RASPBERRY
+#endif
+}
+
+static PinEgoera kotxea_ezkerreko_ldr_irakurri(void)
+{
+	PinEgoera sentsorearen_balioa = Ezgaitu;
 
 #ifdef RASPBERRY
-
+	sentsorearen_balioa = hardware_ezkerreko_ldr_irakurri();
 #else
 	char buf[BUF_SZ] = {0};
 
@@ -39,12 +132,12 @@ int kotxea_ezkerreko_ldr_irakurri(void)
 	return sentsorearen_balioa;
 }
 
-int kotxea_eskubiko_ldr_irakurri(void)
+static PinEgoera kotxea_eskubiko_ldr_irakurri(void)
 {
-	int sentsorearen_balioa = 0;
+	PinEgoera sentsorearen_balioa = Ezgaitu;
 
 #ifdef RASPBERRY
-
+	sentsorearen_balioa = hardware_eskubiko_ldr_irakurri();
 #else
 	char buf[BUF_SZ] = {0};
 

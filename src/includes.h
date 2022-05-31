@@ -6,6 +6,7 @@
 #include <stdbool.h>
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 
 /* POSIX */
 #include <unistd.h>
@@ -19,9 +20,15 @@
 /* LAGUNTZAK */
 #define BUF_SZ 128
 #define BALIOA_ERABILI_GABE(x) (void)(x)
-#define INFO(x) (fprintf(stdout, "Info: " x "\n"))
-#define ABISUA(x) (fprintf(stderr, "Abisua: " x "\n"))
-#define ERROREA(x) (fprintf(stderr, "Errorea: " x "\n"))
+#define OHARRA(x) (fprintf(stdout, "Oharra: %s\n", x))
+#define ABISUA(x) (fprintf(stderr, "Abisua: %s\n", x))
+#define ERROREA(x) (fprintf(stderr, "Errorea: %s\n", x))
 
+/* DATU MOTAK */
+typedef enum pin_egoera_t
+{
+	Ezgaitu,
+	Gaitu,
+} PinEgoera;
 
 #endif

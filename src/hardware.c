@@ -3,7 +3,7 @@
 /* Pinak definitu */
 typedef enum pin_enum
 {
-	MotorraEskubi = 0,
+	MotorraEskubi,
 	MotorraEzkerra,
 	LDREskubi,
 	LDREzkerra
@@ -11,7 +11,7 @@ typedef enum pin_enum
 
 void hardware_init()
 {
-	INFO("Hardwarea konfiguratzen...");
+	OHARRA("Hardwarea konfiguratzen...");
 	wiringPiSetup();
 
 	pinMode(MotorraEskubi, OUTPUT);
@@ -22,29 +22,41 @@ void hardware_init()
 	pullUpDnControl(LDREskubi, PUD_UP);
 	pullUpDnControl(LDREzkerra, PUD_UP);
 
-	INFO("Hardwarea konfiguratuta.");
+	OHARRA("Hardwarea konfiguratuta.");
 }
 
 void hardware_eskubiko_motorra_piztu(void)
 {
-	INFO("Eskubiko motorra piztu.");
+	OHARRA("Eskubiko motorraren pina piztu.");
 	digitalWrite(MotorraEskubi, HIGH);
 }
 
 void hardware_eskubiko_motorra_itzali(void)
 {
-	INFO("Eskubiko motorra itzali.");
+	OHARRA("Eskubiko motorraren pina itzali.");
 	digitalWrite(MotorraEskubi, LOW);
 }
 
 void hardware_ezkerreko_motorra_piztu(void)
 {
-	INFO("Ezkerreko motorra piztu.");
+	OHARRA("Ezkerreko motorraren pina piztu.");
 	digitalWrite(MotorraEzkerra, HIGH);
 }
 
 void hardware_ezkerreko_motorra_itzali(void)
 {
-	INFO("Ezkerreko motorra itzali");
+	OHARRA("Ezkerreko motorraren pina itzali.");
 	digitalWrite(MotorraEzkerra, LOW);
+}
+
+PinEgoera hardware_eskubiko_ldr_irakurri(void)
+{
+	OHARRA("Eskubiko LDR-aren pina irakurri.");
+	return digitalRead(LDREskubi);
+}
+
+PinEgoera hardware_ezkerreko_ldr_irakurri(void)
+{
+	OHARRA("Ezkerreko LDR-aren pina irakurri.");
+	return digitalRead(LDREzkerra);
 }
