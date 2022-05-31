@@ -10,7 +10,7 @@
 #include <time.h>
 
 /* POSIX */
-#include <poll.h>
+#include <sys/poll.h>
 #include <termios.h>
 #include <unistd.h>
 
