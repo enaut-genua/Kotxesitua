@@ -109,6 +109,7 @@ static void kotxea_ezkerreko_motorra_gelditu(void)
 
 	MOTORE_EGOERA.ezkerra_piztuta = false;
 #ifdef RASPBERRY
+	hardware_ezkerreko_motorra_itzali();
 #endif
 }
 
@@ -131,6 +132,7 @@ static void kotxea_eskubiko_motorra_gelditu(void)
 
 	MOTORE_EGOERA.eskubi_piztuta = false;
 #ifdef RASPBERRY
+	hardware_eskubiko_motorra_itzali();
 #endif
 }
 
