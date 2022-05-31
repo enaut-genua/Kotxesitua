@@ -44,6 +44,7 @@ bool kotxea_urruneko_kontrola(void)
 			switch (c)
 			{
 			case 'w':
+				// Aurrera
 				kotxea_bi_motorrak_mugitu();
 				break;
 			case 'a':
