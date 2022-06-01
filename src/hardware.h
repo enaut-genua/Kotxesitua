@@ -3,7 +3,7 @@
 
 #include "includes.h"
 
-void hardware_init(void);
+bool hardware_init(void);
 
 void hardware_eskubiko_motorra_piztu(void);
 void hardware_eskubiko_motorra_itzali(void);

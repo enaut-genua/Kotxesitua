@@ -80,11 +80,19 @@ void kotxea_marra_jarraitu(void)
 		{
 			kotxea_ezkerreko_motorra_gelditu();
 		}
+		else
+		{
+			kotxea_ezkerreko_motorra_mugitu();
+		}
+		
 		if (kotxea_eskubiko_ldr_irakurri() == Ezgaitu)
 		{
 			kotxea_eskubiko_motorra_gelditu();
 		}
-		kotxea_bi_motorrak_mugitu();
+		else
+		{
+			kotxea_eskubiko_motorra_mugitu();
+		}	
 	}
 }
 

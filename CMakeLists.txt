@@ -2,7 +2,7 @@
 cmake_minimum_required(VERSION 3.16.0)
 
 # Konpilazio gurutzatua aktibatu edo desaktibatzen duen interruptorea (ON/OFF). Automatikoki itzalita (OFF).
-option(KONP_GURUTZ "Konpilazio gurutzatua Raspberry Pi-rako" OFF)
+option(KONP_GURUTZ "Konpilazio gurutzatua Raspberry Pi-rako" ON)
 
 # Konfiguratu konpilazio gurutzatua.
 if(KONP_GURUTZ)
@@ -41,7 +41,7 @@ target_compile_options(
 			$<$<C_COMPILER_ID:GNU>:			# Konpilatzailea GCC (G.C.C: GNU Compiler Colection, horregatik GNU) bada:
 				-Wall							# Abisu guztiak aktibatu
 				-Wextra							# Abisu extrak aktibatu
-				#-Werror							# Abisu guztiak errore bilakatu
+				-Werror							# Abisu guztiak errore bilakatu
 				-pedantic						# C-lengoaiari buruzko (sintaxia) abisuak aktibatu
 				-pedantic-errors				# Aurreko abisuak errore bilakatu.
 			>

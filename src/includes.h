@@ -17,6 +17,7 @@
 /* Wiring Pi */
 #ifdef RASPBERRY
 #include <wiringPi.h>
+#include <softPwm.h>
 #endif
 
 /* LAGUNTZAK */
@@ -29,7 +30,7 @@
 /* DATU MOTAK */
 typedef enum pin_egoera_t
 {
-	Ezgaitu,
+	Ezgaitu = 0,
 	Gaitu,
 } PinEgoera;
 

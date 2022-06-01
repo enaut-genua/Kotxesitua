@@ -9,7 +9,7 @@ typedef enum pin_enum
 	LDREzkerra
 } Pin;
 
-void hardware_init()
+bool hardware_init()
 {
 	OHARRA("Hardwarea konfiguratzen...");
 	wiringPiSetup();
@@ -22,7 +22,25 @@ void hardware_init()
 	pullUpDnControl(LDREskubi, PUD_UP);
 	pullUpDnControl(LDREzkerra, PUD_UP);
 
+	if (softPwmCreate(MotorraEskubi, 0, 100) != 0)
+	{
+		char errore_mezua[BUF_SZ] = {'\0'};
+		snprintf(errore_mezua, BUF_SZ, "hardware_init() -> softPwmCreate(): %s", strerror(errno));
+		ERROREA(errore_mezua);
+		return false;	
+	}
+	
+	if (softPwmCreate(MotorraEzkerra, 0, 100) != 0)
+	{
+		char errore_mezua[BUF_SZ] = {'\0'};
+		snprintf(errore_mezua, BUF_SZ, "hardware_init() -> softPwmCreate(): %s", strerror(errno));
+		ERROREA(errore_mezua);
+		return false;	
+	}
+
 	OHARRA("Hardwarea konfiguratuta.");
+
+	return true;
 }
 
 void hardware_eskubiko_motorra_piztu(void)
