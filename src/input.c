@@ -37,7 +37,7 @@ bool input_init(void)
 bool input_tekla_sakatu_da(void)
 {
 	struct pollfd stdin_fd = {.fd = STDIN_FILENO, .events = POLLIN};
-	return poll(&stdin_fd, 1, 50) > 0 ? true : false;
+	return poll(&stdin_fd, 1, 50) > 0;
 }
 
 bool input_destroy(void)
