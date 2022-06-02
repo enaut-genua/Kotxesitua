@@ -9,6 +9,8 @@ typedef enum pin_enum
 	LDREzkerra
 } Pin;
 
+/* Funtzio Publikoak */
+
 bool hardware_init()
 {
 	OHARRA("Hardwarea konfiguratzen...");
@@ -27,15 +29,15 @@ bool hardware_init()
 		char errore_mezua[BUF_SZ] = {'\0'};
 		snprintf(errore_mezua, BUF_SZ, "hardware_init() -> softPwmCreate(): %s", strerror(errno));
 		ERROREA(errore_mezua);
-		return false;	
+		return false;
 	}
-	
+
 	if (softPwmCreate(MotorraEzkerra, 0, 100) != 0)
 	{
 		char errore_mezua[BUF_SZ] = {'\0'};
 		snprintf(errore_mezua, BUF_SZ, "hardware_init() -> softPwmCreate(): %s", strerror(errno));
 		ERROREA(errore_mezua);
-		return false;	
+		return false;
 	}
 
 	OHARRA("Hardwarea konfiguratuta.");
@@ -65,6 +67,34 @@ void hardware_ezkerreko_motorra_itzali(void)
 {
 	OHARRA("Ezkerreko motorraren pina itzali.");
 	digitalWrite(MotorraEzkerra, LOW);
+}
+
+void hardware_eskubiko_motorra_azeleratu(int *balioa)
+{
+	OHARRA("Eskubiko motorraren pina frekuentzia handitu.");
+	*balioa += *balioa < 100 ? 5 : 0;
+	softPwmWrite(MotorraEskubi, *balioa);
+}
+
+void hardware_eskubiko_motorra_frenatu(int *balioa)
+{
+	OHARRA("Eskubiko motorraren pina frekuentzia txikitu.");
+	*balioa -= *balioa > 0 ? 5 : 0;
+	softPwmWrite(MotorraEskubi, *balioa);
+}
+
+void hardware_ezkerreko_motorra_azeleratu(int *balioa)
+{
+	OHARRA("Ezkerreko motorraren pina frekuentzia handitu.");
+	*balioa += *balioa < 100 ? 5 : 0;
+	softPwmWrite(MotorraEzkerra, *balioa);
+}
+
+void hardware_ezkerreko_motorra_frenatu(int *balioa)
+{
+	OHARRA("Ezkerreko motorraren pina frekuentzia txikitu.");
+	*balioa -= *balioa > 0 ? 5 : 0;
+	softPwmWrite(MotorraEzkerra, *balioa);
 }
 
 PinEgoera hardware_eskubiko_ldr_irakurri(void)

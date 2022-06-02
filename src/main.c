@@ -8,7 +8,7 @@ int main(void)
 {
 	kotxea_urruneko_kontrola();
 
-	kotxea_marra_jarraitu();
+	// kotxea_marra_jarraitu();
 
 	return EXIT_SUCCESS;
 }

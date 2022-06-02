@@ -8,10 +8,16 @@
 
 /* ALDAGAI GLOBALAK */
 
-static struct motore_egoera_t
+typedef struct motore_t
 {
-	bool eskubi_piztuta;
-	bool ezkerra_piztuta;
+	bool azeleratu;
+	int potentzia_balioa;
+} Motorea;
+
+static struct
+{
+	Motorea eskubi;
+	Motorea ezkerra;
 } MOTORE_EGOERA = {0};
 
 /* FUNTZIO PRIBATUAK */
@@ -20,6 +26,12 @@ static void kotxea_ezkerreko_motorra_mugitu(void);
 static void kotxea_ezkerreko_motorra_gelditu(void);
 static void kotxea_eskubiko_motorra_mugitu(void);
 static void kotxea_eskubiko_motorra_gelditu(void);
+
+static void kotxea_ezkerreko_motorra_azeleratu(void);
+static void kotxea_ezkerreko_motorra_frenatu(void);
+static void kotxea_eskubiko_motorra_azeleratu(void);
+static void kotxea_eskubiko_motorra_frenatu(void);
+
 static void kotxea_bi_motorrak_mugitu(void);
 static void kotxea_gelditu(void);
 static PinEgoera kotxea_ezkerreko_ldr_irakurri(void);
@@ -78,21 +90,21 @@ void kotxea_marra_jarraitu(void)
 	{
 		if (kotxea_ezkerreko_ldr_irakurri() == Ezgaitu)
 		{
-			kotxea_ezkerreko_motorra_gelditu();
+			kotxea_ezkerreko_motorra_frenatu();
 		}
 		else
 		{
-			kotxea_ezkerreko_motorra_mugitu();
+			kotxea_ezkerreko_motorra_azeleratu();
 		}
-		
+
 		if (kotxea_eskubiko_ldr_irakurri() == Ezgaitu)
 		{
-			kotxea_eskubiko_motorra_gelditu();
+			kotxea_eskubiko_motorra_frenatu();
 		}
 		else
 		{
-			kotxea_eskubiko_motorra_mugitu();
-		}	
+			kotxea_eskubiko_motorra_azeleratu();
+		}
 	}
 }
 
@@ -100,11 +112,11 @@ void kotxea_marra_jarraitu(void)
 
 static void kotxea_ezkerreko_motorra_mugitu(void)
 {
-	if (MOTORE_EGOERA.ezkerra_piztuta == false)
+	if (MOTORE_EGOERA.ezkerra.azeleratu == false)
 	{
 		OHARRA("Ezkerreko motorra mugitzen...");
 
-		MOTORE_EGOERA.ezkerra_piztuta = true;
+		MOTORE_EGOERA.ezkerra.azeleratu = true;
 #ifdef RASPBERRY
 		hardware_ezkerreko_motorra_piztu();
 #endif
@@ -115,7 +127,7 @@ static void kotxea_ezkerreko_motorra_gelditu(void)
 {
 	OHARRA("Ezkerreko motorra gelditu.");
 
-	MOTORE_EGOERA.ezkerra_piztuta = false;
+	MOTORE_EGOERA.ezkerra.azeleratu = false;
 #ifdef RASPBERRY
 	hardware_ezkerreko_motorra_itzali();
 #endif
@@ -123,11 +135,11 @@ static void kotxea_ezkerreko_motorra_gelditu(void)
 
 static void kotxea_eskubiko_motorra_mugitu(void)
 {
-	if (MOTORE_EGOERA.eskubi_piztuta == false)
+	if (MOTORE_EGOERA.eskubi.azeleratu == false)
 	{
 		OHARRA("Eskubiko motorra mugitzen...");
 
-		MOTORE_EGOERA.eskubi_piztuta = true;
+		MOTORE_EGOERA.eskubi.azeleratu = true;
 #ifdef RASPBERRY
 		hardware_eskubiko_motorra_piztu();
 #endif
@@ -138,19 +150,51 @@ static void kotxea_eskubiko_motorra_gelditu(void)
 {
 	OHARRA("Eskubiko motorra gelditu.");
 
-	MOTORE_EGOERA.eskubi_piztuta = false;
+	MOTORE_EGOERA.eskubi.azeleratu = false;
 #ifdef RASPBERRY
 	hardware_eskubiko_motorra_itzali();
 #endif
 }
 
+static void kotxea_ezkerreko_motorra_azeleratu(void)
+{
+	OHARRA("Ezkerreko motorra azeleratu.");
+#ifdef RASPBERRY
+	hardware_ezkerreko_motorra_azeleratu(&(MOTORE_EGOERA.ezkerra.potentzia_balioa));
+#endif
+}
+
+static void kotxea_ezkerreko_motorra_frenatu(void)
+{
+	OHARRA("Ezkerreko motorra frenatu.");
+#ifdef RASPBERRY
+	hardware_ezkerreko_motorra_frenatu(&(MOTORE_EGOERA.ezkerra.potentzia_balioa));
+#endif
+}
+
+static void kotxea_eskubiko_motorra_azeleratu(void)
+{
+	OHARRA("Eskubiko motorra azeleratu.");
+#ifdef RASPBERRY
+	hardware_eskubiko_motorra_azeleratu(&(MOTORE_EGOERA.eskubi.potentzia_balioa));
+#endif
+}
+
+static void kotxea_eskubiko_motorra_frenatu(void)
+{
+	OHARRA("Eskubiko motorra frenatu.");
+#ifdef RASPBERRY
+	hardware_eskubiko_motorra_frenatu(&(MOTORE_EGOERA.eskubi.potentzia_balioa));
+#endif
+}
+
 static void kotxea_bi_motorrak_mugitu(void)
 {
-	if (MOTORE_EGOERA.eskubi_piztuta == false)
+	if (MOTORE_EGOERA.eskubi.azeleratu == false)
 	{
 		kotxea_eskubiko_motorra_mugitu();
 	}
-	if (MOTORE_EGOERA.ezkerra_piztuta == false)
+	if (MOTORE_EGOERA.ezkerra.azeleratu == false)
 	{
 		kotxea_ezkerreko_motorra_mugitu();
 	}
@@ -158,11 +202,11 @@ static void kotxea_bi_motorrak_mugitu(void)
 
 static void kotxea_gelditu(void)
 {
-	if (MOTORE_EGOERA.eskubi_piztuta)
+	if (MOTORE_EGOERA.eskubi.azeleratu)
 	{
 		kotxea_eskubiko_motorra_gelditu();
 	}
-	if (MOTORE_EGOERA.ezkerra_piztuta)
+	if (MOTORE_EGOERA.ezkerra.azeleratu)
 	{
 		kotxea_ezkerreko_motorra_gelditu();
 	}
