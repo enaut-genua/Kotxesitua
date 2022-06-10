@@ -1,5 +1,8 @@
 #include "hardware.h"
 
+static const int POTENTZIA_LIMITEA = 30;
+static const int INTERBALOA = POTENTZIA_LIMITEA - 1;
+
 /* Pinak definitu */
 typedef enum pin_enum
 {
@@ -24,7 +27,7 @@ bool hardware_init()
 	pullUpDnControl(LDREskubi, PUD_UP);
 	pullUpDnControl(LDREzkerra, PUD_UP);
 
-	if (softPwmCreate(MotorraEskubi, 0, 100) != 0)
+	if (softPwmCreate(MotorraEskubi, POTENTZIA_LIMITEA, 100) != 0)
 	{
 		char errore_mezua[BUF_SZ] = {'\0'};
 		snprintf(errore_mezua, BUF_SZ, "hardware_init() -> softPwmCreate(): %s", strerror(errno));
@@ -32,7 +35,7 @@ bool hardware_init()
 		return false;
 	}
 
-	if (softPwmCreate(MotorraEzkerra, 0, 100) != 0)
+	if (softPwmCreate(MotorraEzkerra, 20, 100) != 0)
 	{
 		char errore_mezua[BUF_SZ] = {'\0'};
 		snprintf(errore_mezua, BUF_SZ, "hardware_init() -> softPwmCreate(): %s", strerror(errno));
@@ -72,28 +75,28 @@ void hardware_ezkerreko_motorra_itzali(void)
 void hardware_eskubiko_motorra_azeleratu(int *balioa)
 {
 	OHARRA("Eskubiko motorraren pina frekuentzia handitu.");
-	*balioa += *balioa < 100 ? 5 : 0;
+	*balioa += *balioa < POTENTZIA_LIMITEA ? INTERBALOA : 0;
 	softPwmWrite(MotorraEskubi, *balioa);
 }
 
 void hardware_eskubiko_motorra_frenatu(int *balioa)
 {
 	OHARRA("Eskubiko motorraren pina frekuentzia txikitu.");
-	*balioa -= *balioa > 0 ? 5 : 0;
+	*balioa -= *balioa > 0 ? INTERBALOA : 0;
 	softPwmWrite(MotorraEskubi, *balioa);
 }
 
 void hardware_ezkerreko_motorra_azeleratu(int *balioa)
 {
 	OHARRA("Ezkerreko motorraren pina frekuentzia handitu.");
-	*balioa += *balioa < 100 ? 5 : 0;
+	*balioa += *balioa < POTENTZIA_LIMITEA ? INTERBALOA : 0;
 	softPwmWrite(MotorraEzkerra, *balioa);
 }
 
 void hardware_ezkerreko_motorra_frenatu(int *balioa)
 {
 	OHARRA("Ezkerreko motorraren pina frekuentzia txikitu.");
-	*balioa -= *balioa > 0 ? 5 : 0;
+	*balioa -= *balioa > 0 ? INTERBALOA : 0;
 	softPwmWrite(MotorraEzkerra, *balioa);
 }
 

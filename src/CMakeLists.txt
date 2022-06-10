@@ -8,6 +8,8 @@ target_sources(
 			input.c				# Kodea
 			kotxea.h			# Kodea
 			kotxea.c			# Kodea
+			dijkstra.h			# Kodea
+			dijkstra.c 			# Kodea
 )
 
 # Konpilazio gurutzatua aktibatuta badago

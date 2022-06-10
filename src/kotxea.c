@@ -88,22 +88,26 @@ void kotxea_marra_jarraitu(void)
 	OHARRA("Marra bat jarraitzen...");
 	while (true)
 	{
-		if (kotxea_ezkerreko_ldr_irakurri() == Ezgaitu)
+		if (kotxea_ezkerreko_ldr_irakurri() == Gaitu)
 		{
 			kotxea_ezkerreko_motorra_frenatu();
+			// kotxea_ezkerreko_motorra_gelditu();
 		}
 		else
 		{
 			kotxea_ezkerreko_motorra_azeleratu();
+			// kotxea_ezkerreko_motorra_mugitu();
 		}
 
-		if (kotxea_eskubiko_ldr_irakurri() == Ezgaitu)
+		if (kotxea_eskubiko_ldr_irakurri() == Gaitu)
 		{
 			kotxea_eskubiko_motorra_frenatu();
+			// kotxea_eskubiko_motorra_gelditu();
 		}
 		else
 		{
 			kotxea_eskubiko_motorra_azeleratu();
+			// kotxea_eskubiko_motorra_mugitu();
 		}
 	}
 }

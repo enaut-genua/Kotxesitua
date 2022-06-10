@@ -6,9 +6,18 @@
 
 int main(void)
 {
-	kotxea_urruneko_kontrola();
+	hardware_init();
+	
+	// while (true)
+	// {
+	// 	hardware_eskubiko_motorra_piztu();
+	// 	hardware_ezkerreko_motorra_piztu();
+	// }
+	
+	
+	// kotxea_urruneko_kontrola();
 
-	// kotxea_marra_jarraitu();
+	kotxea_marra_jarraitu();
 
 	return EXIT_SUCCESS;
 }
