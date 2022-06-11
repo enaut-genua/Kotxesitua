@@ -185,7 +185,7 @@ static void kotxea_eskubiko_motorra_frenatu(Kotxea *kotxea)
 	OHARRA("Eskubiko motorra frenatu.");
 
 	kotxea->mot_eskubi.azeleratu = false;
-	kotxea->mot_eskubi.potentzia_balioa += (kotxea->mot_eskubi.potentzia_balioa < kotxea->potentzia_limitea) ? kotxea->interbaloa : 0;
+	kotxea->mot_eskubi.potentzia_balioa -= (kotxea->mot_eskubi.potentzia_balioa < kotxea->potentzia_limitea) ? kotxea->interbaloa : 0;
 
 #ifdef RASPBERRY
 	hardware_eskubiko_motorra_potentzia(kotxea->mot_eskubi.potentzia_balioa);
