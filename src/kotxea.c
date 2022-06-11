@@ -1,49 +1,67 @@
 #include "kotxea.h"
-
 #include "input.h"
 
 #ifdef RASPBERRY
 #include "hardware.h"
 #endif
 
-/* ALDAGAI GLOBALAK */
+/* DATU MOTA PRIBATUAK */
 
-typedef struct motore_t
+typedef struct
 {
 	bool azeleratu;
 	int potentzia_balioa;
 } Motorea;
 
-static struct
+typedef struct
 {
-	Motorea eskubi;
-	Motorea ezkerra;
-} MOTORE_EGOERA = {0};
+	int potentzia_limitea;
+	int interbaloa;
+	Motorea mot_eskubi;
+	Motorea mot_ezkerra;
+} Kotxea;
 
 /* FUNTZIO PRIBATUAK */
 
-static void kotxea_ezkerreko_motorra_mugitu(void);
-static void kotxea_ezkerreko_motorra_gelditu(void);
-static void kotxea_eskubiko_motorra_mugitu(void);
-static void kotxea_eskubiko_motorra_gelditu(void);
+static bool kotxea_init(Kotxea *kotxea);
+static void kotxea_ezkerreko_motorra_azeleratu(Kotxea *kotxea);
+static void kotxea_ezkerreko_motorra_frenatu(Kotxea *kotxea);
+static void kotxea_eskubiko_motorra_azeleratu(Kotxea *kotxea);
+static void kotxea_eskubiko_motorra_frenatu(Kotxea *kotxea);
 
-static void kotxea_ezkerreko_motorra_azeleratu(void);
-static void kotxea_ezkerreko_motorra_frenatu(void);
-static void kotxea_eskubiko_motorra_azeleratu(void);
-static void kotxea_eskubiko_motorra_frenatu(void);
-
-static void kotxea_bi_motorrak_mugitu(void);
-static void kotxea_gelditu(void);
 static PinEgoera kotxea_ezkerreko_ldr_irakurri(void);
 static PinEgoera kotxea_eskubiko_ldr_irakurri(void);
 
 /* FUNTZIO PUBLIKOEN INPLEMENTAZIOA */
 
+bool kotxea_init(Kotxea *kotxea)
+{
+	bool ret = true;
+
+#ifdef RASPBERRY
+	ret = hardware_init(kotxea->potentzia_limitea);
+#endif
+
+	OHARRA("Kotxea prest.");
+
+	return ret;
+}
+
 bool kotxea_urruneko_kontrola(void)
 {
+	OHARRA("Urruneko kontrola.");
+
+	Kotxea kotxea = {.potentzia_limitea = POTENTZIA_MAX, .interbaloa = kotxea.potentzia_limitea};
+
+	if (kotxea_init(&kotxea) == false)
+	{
+		ERROREA("kotxea_urruneko_kontrola(): Kotxea ezin izan da prestatu.");
+		return false;
+	}
+
 	if (input_init() == false)
 	{
-		ERROREA("Inputa ez da ondo konfiguratu.");
+		ERROREA("kotxea_urruneko_kontrola(): Inputa ez da ondo konfiguratu.");
 		return false;
 	}
 
@@ -57,25 +75,26 @@ bool kotxea_urruneko_kontrola(void)
 			{
 			case 'w':
 				// Aurrera
-				kotxea_bi_motorrak_mugitu();
+				kotxea_eskubiko_motorra_azeleratu(&kotxea);
+				kotxea_ezkerreko_motorra_azeleratu(&kotxea);
 				break;
 			case 'a':
 				// Ezkerrera
-				kotxea_eskubiko_motorra_mugitu();
+				kotxea_eskubiko_motorra_azeleratu(&kotxea);
 				break;
 			case 'd':
 				// Eskubira
-				kotxea_ezkerreko_motorra_mugitu();
+				kotxea_ezkerreko_motorra_azeleratu(&kotxea);
 				break;
 			}
 		}
-		kotxea_gelditu();
+		kotxea_eskubiko_motorra_frenatu(&kotxea);
+		kotxea_ezkerreko_motorra_frenatu(&kotxea);
 	}
 
 	if (input_destroy() == false)
 	{
-		ERROREA("Inputa ez da ondo borratu.");
-		return false;
+		ABISUA("Inputa ez da ondo borratu.");
 	}
 
 	OHARRA("Urruneko kontroletik ateratzen...");
@@ -83,139 +102,90 @@ bool kotxea_urruneko_kontrola(void)
 	return true;
 }
 
-void kotxea_marra_jarraitu(void)
+bool kotxea_marra_jarraitu(void)
 {
-	OHARRA("Marra bat jarraitzen...");
+	OHARRA("Marra bat jarraitu.");
+
+	Kotxea kotxea = {.potentzia_limitea = 30, .interbaloa = kotxea.potentzia_limitea - 1};
+
+	if (kotxea_init(&kotxea) == false)
+	{
+		ERROREA("kotxea_marra_jarraitu(): Kotxea ezin izan da prestatu.");
+		return false;
+	}
+
 	while (true)
 	{
 		if (kotxea_ezkerreko_ldr_irakurri() == Gaitu)
 		{
-			kotxea_ezkerreko_motorra_frenatu();
-			// kotxea_ezkerreko_motorra_gelditu();
+			kotxea_ezkerreko_motorra_frenatu(&kotxea);
 		}
 		else
 		{
-			kotxea_ezkerreko_motorra_azeleratu();
-			// kotxea_ezkerreko_motorra_mugitu();
+			kotxea_ezkerreko_motorra_azeleratu(&kotxea);
 		}
 
 		if (kotxea_eskubiko_ldr_irakurri() == Gaitu)
 		{
-			kotxea_eskubiko_motorra_frenatu();
-			// kotxea_eskubiko_motorra_gelditu();
+			kotxea_eskubiko_motorra_frenatu(&kotxea);
 		}
 		else
 		{
-			kotxea_eskubiko_motorra_azeleratu();
-			// kotxea_eskubiko_motorra_mugitu();
+			kotxea_eskubiko_motorra_azeleratu(&kotxea);
 		}
 	}
+
+	return true;
 }
 
 /* FUNTZIO PRIBATUEN INPLEMENTAZIOA */
 
-static void kotxea_ezkerreko_motorra_mugitu(void)
-{
-	if (MOTORE_EGOERA.ezkerra.azeleratu == false)
-	{
-		OHARRA("Ezkerreko motorra mugitzen...");
-
-		MOTORE_EGOERA.ezkerra.azeleratu = true;
-#ifdef RASPBERRY
-		hardware_ezkerreko_motorra_piztu();
-#endif
-	}
-}
-
-static void kotxea_ezkerreko_motorra_gelditu(void)
-{
-	OHARRA("Ezkerreko motorra gelditu.");
-
-	MOTORE_EGOERA.ezkerra.azeleratu = false;
-#ifdef RASPBERRY
-	hardware_ezkerreko_motorra_itzali();
-#endif
-}
-
-static void kotxea_eskubiko_motorra_mugitu(void)
-{
-	if (MOTORE_EGOERA.eskubi.azeleratu == false)
-	{
-		OHARRA("Eskubiko motorra mugitzen...");
-
-		MOTORE_EGOERA.eskubi.azeleratu = true;
-#ifdef RASPBERRY
-		hardware_eskubiko_motorra_piztu();
-#endif
-	}
-}
-
-static void kotxea_eskubiko_motorra_gelditu(void)
-{
-	OHARRA("Eskubiko motorra gelditu.");
-
-	MOTORE_EGOERA.eskubi.azeleratu = false;
-#ifdef RASPBERRY
-	hardware_eskubiko_motorra_itzali();
-#endif
-}
-
-static void kotxea_ezkerreko_motorra_azeleratu(void)
+static void kotxea_ezkerreko_motorra_azeleratu(Kotxea *kotxea)
 {
 	OHARRA("Ezkerreko motorra azeleratu.");
+
+	kotxea->mot_ezkerra.azeleratu = true;
+	kotxea->mot_ezkerra.potentzia_balioa += (kotxea->mot_ezkerra.potentzia_balioa < kotxea->potentzia_limitea) ? kotxea->interbaloa : 0;
+
 #ifdef RASPBERRY
-	hardware_ezkerreko_motorra_azeleratu(&(MOTORE_EGOERA.ezkerra.potentzia_balioa));
+	hardware_ezkerreko_motorra_potentzia(kotxea->mot_ezkerra.potentzia_balioa);
 #endif
 }
 
-static void kotxea_ezkerreko_motorra_frenatu(void)
+static void kotxea_ezkerreko_motorra_frenatu(Kotxea *kotxea)
 {
 	OHARRA("Ezkerreko motorra frenatu.");
+
+	kotxea->mot_ezkerra.azeleratu = false;
+	kotxea->mot_ezkerra.potentzia_balioa -= (kotxea->mot_ezkerra.potentzia_balioa > 0) ? kotxea->interbaloa : 0;
+
 #ifdef RASPBERRY
-	hardware_ezkerreko_motorra_frenatu(&(MOTORE_EGOERA.ezkerra.potentzia_balioa));
+	hardware_ezkerreko_motorra_potentzia(kotxea->mot_ezkerra.potentzia_balioa);
 #endif
 }
 
-static void kotxea_eskubiko_motorra_azeleratu(void)
+static void kotxea_eskubiko_motorra_azeleratu(Kotxea *kotxea)
 {
 	OHARRA("Eskubiko motorra azeleratu.");
+
+	kotxea->mot_eskubi.azeleratu = true;
+	kotxea->mot_eskubi.potentzia_balioa += (kotxea->mot_eskubi.potentzia_balioa < kotxea->potentzia_limitea) ? kotxea->interbaloa : 0;
+
 #ifdef RASPBERRY
-	hardware_eskubiko_motorra_azeleratu(&(MOTORE_EGOERA.eskubi.potentzia_balioa));
+	hardware_eskubiko_motorra_potentzia(kotxea->mot_ezkerra.potentzia_balioa);
 #endif
 }
 
-static void kotxea_eskubiko_motorra_frenatu(void)
+static void kotxea_eskubiko_motorra_frenatu(Kotxea *kotxea)
 {
 	OHARRA("Eskubiko motorra frenatu.");
+
+	kotxea->mot_eskubi.azeleratu = false;
+	kotxea->mot_eskubi.potentzia_balioa += (kotxea->mot_eskubi.potentzia_balioa < kotxea->potentzia_limitea) ? kotxea->interbaloa : 0;
+
 #ifdef RASPBERRY
-	hardware_eskubiko_motorra_frenatu(&(MOTORE_EGOERA.eskubi.potentzia_balioa));
+	hardware_eskubiko_motorra_potentzia(kotxea->mot_eskubi.potentzia_balioa);
 #endif
-}
-
-static void kotxea_bi_motorrak_mugitu(void)
-{
-	if (MOTORE_EGOERA.eskubi.azeleratu == false)
-	{
-		kotxea_eskubiko_motorra_mugitu();
-	}
-	if (MOTORE_EGOERA.ezkerra.azeleratu == false)
-	{
-		kotxea_ezkerreko_motorra_mugitu();
-	}
-}
-
-static void kotxea_gelditu(void)
-{
-	if (MOTORE_EGOERA.eskubi.azeleratu)
-	{
-		kotxea_eskubiko_motorra_gelditu();
-	}
-	if (MOTORE_EGOERA.ezkerra.azeleratu)
-	{
-		kotxea_ezkerreko_motorra_gelditu();
-	}
-
-	OHARRA("Kotxea geldituta.");
 }
 
 static PinEgoera kotxea_ezkerreko_ldr_irakurri(void)

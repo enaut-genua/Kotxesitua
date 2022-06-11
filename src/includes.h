@@ -22,13 +22,15 @@
 
 /* LAGUNTZAK */
 #define BUF_SZ 128
+#define POTENTZIA_MAX 100
+
 #define BALIOA_ERABILI_GABE(x) (void)(x)
 #define OHARRA(x) (fprintf(stdout, "Oharra: %s\n", x))
 #define ABISUA(x) (fprintf(stderr, "Abisua: %s\n", x))
 #define ERROREA(x) (fprintf(stderr, "Errorea: %s\n", x))
 
 /* DATU MOTAK */
-typedef enum pin_egoera_t
+typedef enum
 {
 	Ezgaitu = 0,
 	Gaitu,

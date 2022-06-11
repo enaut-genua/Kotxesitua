@@ -2,22 +2,20 @@
 
 #include "input.h"
 #include "kotxea.h"
-#include "hardware.h"
 
 int main(void)
 {
-	hardware_init();
-	
-	// while (true)
+	// if (kotxea_urruneko_kontrola() == false)
 	// {
-	// 	hardware_eskubiko_motorra_piztu();
-	// 	hardware_ezkerreko_motorra_piztu();
+	// 	ERROREA("Ezin izan da urruneko kontrola hasi.");
+	// 	return EXIT_FAILURE;
 	// }
-	
-	
-	// kotxea_urruneko_kontrola();
 
-	kotxea_marra_jarraitu();
+	if (kotxea_marra_jarraitu() == false)
+	{
+		ERROREA("Ezin izan da marra jarraitu.");
+		return EXIT_FAILURE;
+	}
 
 	return EXIT_SUCCESS;
 }

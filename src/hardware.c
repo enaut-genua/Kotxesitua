@@ -1,8 +1,5 @@
 #include "hardware.h"
 
-static const int POTENTZIA_LIMITEA = 30;
-static const int INTERBALOA = POTENTZIA_LIMITEA - 1;
-
 /* Pinak definitu */
 typedef enum pin_enum
 {
@@ -14,10 +11,15 @@ typedef enum pin_enum
 
 /* Funtzio Publikoak */
 
-bool hardware_init()
+bool hardware_init(const int potentzia_limitea)
 {
 	OHARRA("Hardwarea konfiguratzen...");
-	wiringPiSetup();
+
+	if (wiringPiSetup() != 0)
+	{
+		ERROREA("hardware_init() -> wiringPiSetup(): Errorea wiringPi konfiguratzean.");
+		return false;
+	}
 
 	pinMode(MotorraEskubi, OUTPUT);
 	pinMode(MotorraEzkerra, OUTPUT);
@@ -27,7 +29,7 @@ bool hardware_init()
 	pullUpDnControl(LDREskubi, PUD_UP);
 	pullUpDnControl(LDREzkerra, PUD_UP);
 
-	if (softPwmCreate(MotorraEskubi, POTENTZIA_LIMITEA, 100) != 0)
+	if (softPwmCreate(MotorraEskubi, potentzia_limitea, 100) != 0)
 	{
 		char errore_mezua[BUF_SZ] = {'\0'};
 		snprintf(errore_mezua, BUF_SZ, "hardware_init() -> softPwmCreate(): %s", strerror(errno));
@@ -35,7 +37,7 @@ bool hardware_init()
 		return false;
 	}
 
-	if (softPwmCreate(MotorraEzkerra, 20, 100) != 0)
+	if (softPwmCreate(MotorraEzkerra, potentzia_limitea, 100) != 0)
 	{
 		char errore_mezua[BUF_SZ] = {'\0'};
 		snprintf(errore_mezua, BUF_SZ, "hardware_init() -> softPwmCreate(): %s", strerror(errno));
@@ -48,56 +50,16 @@ bool hardware_init()
 	return true;
 }
 
-void hardware_eskubiko_motorra_piztu(void)
+void hardware_eskubiko_motorra_potentzia(const int balioa)
 {
-	OHARRA("Eskubiko motorraren pina piztu.");
-	digitalWrite(MotorraEskubi, HIGH);
+	OHARRA("Eskubiko pinaren potentzia aldatu.");
+	softPwmWrite(MotorraEskubi, balioa);
 }
 
-void hardware_eskubiko_motorra_itzali(void)
+void hardware_ezkerreko_motorra_potentzia(const int balioa)
 {
-	OHARRA("Eskubiko motorraren pina itzali.");
-	digitalWrite(MotorraEskubi, LOW);
-}
-
-void hardware_ezkerreko_motorra_piztu(void)
-{
-	OHARRA("Ezkerreko motorraren pina piztu.");
-	digitalWrite(MotorraEzkerra, HIGH);
-}
-
-void hardware_ezkerreko_motorra_itzali(void)
-{
-	OHARRA("Ezkerreko motorraren pina itzali.");
-	digitalWrite(MotorraEzkerra, LOW);
-}
-
-void hardware_eskubiko_motorra_azeleratu(int *balioa)
-{
-	OHARRA("Eskubiko motorraren pina frekuentzia handitu.");
-	*balioa += *balioa < POTENTZIA_LIMITEA ? INTERBALOA : 0;
-	softPwmWrite(MotorraEskubi, *balioa);
-}
-
-void hardware_eskubiko_motorra_frenatu(int *balioa)
-{
-	OHARRA("Eskubiko motorraren pina frekuentzia txikitu.");
-	*balioa -= *balioa > 0 ? INTERBALOA : 0;
-	softPwmWrite(MotorraEskubi, *balioa);
-}
-
-void hardware_ezkerreko_motorra_azeleratu(int *balioa)
-{
-	OHARRA("Ezkerreko motorraren pina frekuentzia handitu.");
-	*balioa += *balioa < POTENTZIA_LIMITEA ? INTERBALOA : 0;
-	softPwmWrite(MotorraEzkerra, *balioa);
-}
-
-void hardware_ezkerreko_motorra_frenatu(int *balioa)
-{
-	OHARRA("Ezkerreko motorraren pina frekuentzia txikitu.");
-	*balioa -= *balioa > 0 ? INTERBALOA : 0;
-	softPwmWrite(MotorraEzkerra, *balioa);
+	OHARRA("Ezkerreko pinaren potentzia aldatu.");
+	softPwmWrite(MotorraEzkerra, balioa);
 }
 
 PinEgoera hardware_eskubiko_ldr_irakurri(void)
