@@ -32,7 +32,7 @@ static void kotxea_eskubiko_motorra_frenatu(Kotxea *kotxea);
 static PinEgoera kotxea_ezkerreko_ldr_irakurri(void);
 static PinEgoera kotxea_eskubiko_ldr_irakurri(void);
 
-static bool kotxea_nodo_bilatu(void);
+static bool kotxea_nodo_aurkitu(void);
 
 /* FUNTZIO PUBLIKOEN INPLEMENTAZIOA */
 
@@ -116,7 +116,7 @@ bool kotxea_marra_jarraitu(void)
 		return false;
 	}
 
-	while (kotxea_nodo_bilatu() == false)
+	while (kotxea_nodo_aurkitu() == false)
 	{
 		if (kotxea_ezkerreko_ldr_irakurri() == Gaitu)
 		{
@@ -230,7 +230,7 @@ static PinEgoera kotxea_eskubiko_ldr_irakurri(void)
 	return sentsorearen_balioa;
 }
 
-static bool kotxea_nodo_bilatu(void)
+static bool kotxea_nodo_aurkitu(void)
 {
 	return (kotxea_ezkerreko_ldr_irakurri() == Gaitu && kotxea_eskubiko_ldr_irakurri() == Gaitu);
 }
