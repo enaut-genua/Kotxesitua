@@ -32,6 +32,8 @@ static void kotxea_eskubiko_motorra_frenatu(Kotxea *kotxea);
 static PinEgoera kotxea_ezkerreko_ldr_irakurri(void);
 static PinEgoera kotxea_eskubiko_ldr_irakurri(void);
 
+static bool kotxea_nodo_bilatu(void);
+
 /* FUNTZIO PUBLIKOEN INPLEMENTAZIOA */
 
 bool kotxea_init(Kotxea *kotxea)
@@ -114,7 +116,7 @@ bool kotxea_marra_jarraitu(void)
 		return false;
 	}
 
-	while (true)
+	while (kotxea_nodo_bilatu() == false)
 	{
 		if (kotxea_ezkerreko_ldr_irakurri() == Gaitu)
 		{
@@ -134,6 +136,8 @@ bool kotxea_marra_jarraitu(void)
 			kotxea_eskubiko_motorra_azeleratu(&kotxea);
 		}
 	}
+
+	OHARRA("Helmugara iritsita.");
 
 	return true;
 }
@@ -224,4 +228,9 @@ static PinEgoera kotxea_eskubiko_ldr_irakurri(void)
 #endif
 
 	return sentsorearen_balioa;
+}
+
+static bool kotxea_nodo_bilatu(void)
+{
+	return (kotxea_ezkerreko_ldr_irakurri() == Gaitu && kotxea_eskubiko_ldr_irakurri() == Gaitu);
 }
