@@ -61,7 +61,7 @@ static void dijsktra_kargatu_mapa(Mapa *mapa)
 	FILE *irakurritako_artxiboa = NULL;
 	irakurritako_artxiboa = fopen("dijkstra.mapa", "rb");
 	uint8_t *mapa_struct_byte = (uint8_t *)mapa;
-	for (int i = 0; i < sizeof(int) * 4; i++)
+	for (size_t i = 0; i < sizeof(int) * 4; i++)
 	{
 		fread(mapa_struct_byte + i, sizeof(uint8_t), 1, irakurritako_artxiboa);
 	}
@@ -76,7 +76,7 @@ static void dijsktra_kargatu_mapa(Mapa *mapa)
 		uint8_t *mapa_ertzak_byte = (uint8_t *)aux;
 		for (int j = 0; j < mapa->ertz_kopurua; j++)
 		{
-			for (int i = 0; i < (sizeof(int) * 4); i++)
+			for (size_t i = 0; i < (sizeof(int) * 4); i++)
 			{
 				fread(mapa_ertzak_byte + i, sizeof(uint8_t), 1, irakurritako_artxiboa);
 			}

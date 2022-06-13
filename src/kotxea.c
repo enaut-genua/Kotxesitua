@@ -167,8 +167,8 @@ bool kotxea_marra_jarraitu(void)
 bool kotxea_mapa(void)
 {
 	// Hemen dijsktra jun behar da
-	int tamaina = 5;
-	Norabidea norab[5] = {Iparraldea, Ekialdea, Iparraldea, Mendebaldea, Inora};
+	int tamaina = 6;
+	Norabidea norab[6] = {Iparraldea, Ekialdea, Iparraldea, Mendebaldea, Hegoaldea, Hegoaldea}; // Hasierako puntura buelta
 
 	Kotxea kotxea = {
 		.potentzia_limitea = 30,
