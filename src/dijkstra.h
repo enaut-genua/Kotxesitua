@@ -3,6 +3,16 @@
 
 #include "includes.h"
 
-// typedef struct p
+typedef enum
+{
+    Inora,
+    Iparraldea,
+    Hegoaldea,
+    Ekialdea,
+    Mendebaldea
+} Norabidea;
+
+void dijsktra_init(void);
+void dijkstra_borratu(void);
 
 #endif

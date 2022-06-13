@@ -1,7 +1,7 @@
 #include "hardware.h"
 
 /* Pinak definitu */
-typedef enum pin_enum
+typedef enum
 {
 	MotorraEskubi,
 	MotorraEzkerra,
