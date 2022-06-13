@@ -24,6 +24,7 @@ typedef struct
 /* FUNTZIO PRIBATUAK */
 
 static bool kotxea_init(const Kotxea *kotxea);
+static void kotxea_itzali(void);
 static void kotxea_ezkerreko_motorra_azeleratu(Kotxea *kotxea);
 static void kotxea_ezkerreko_motorra_frenatu(Kotxea *kotxea);
 static void kotxea_eskubiko_motorra_azeleratu(Kotxea *kotxea);
@@ -49,6 +50,16 @@ bool kotxea_init(const Kotxea *kotxea)
 	OHARRA("Kotxea prest.");
 
 	return ret;
+}
+
+static void kotxea_itzali(void)
+{
+	OHARRA("Kotxea gelditu.");
+
+#ifdef RASPBERRY
+	hardware_eskubiko_motorra_potentzia(0);
+	hardware_ezkerreko_motorra_potentzia(0);
+#endif
 }
 
 bool kotxea_urruneko_kontrola(void)
@@ -141,6 +152,7 @@ bool kotxea_marra_jarraitu(void)
 		}
 	}
 
+	kotxea_itzali();
 	OHARRA("Helmugara iritsita.");
 
 	return true;
