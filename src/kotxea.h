@@ -5,5 +5,6 @@
 
 bool kotxea_urruneko_kontrola(void);
 bool kotxea_marra_jarraitu(void);
+bool kotxea_mapa(void);
 
 #endif

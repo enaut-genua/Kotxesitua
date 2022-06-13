@@ -1,5 +1,6 @@
 #include "kotxea.h"
 #include "input.h"
+#include "dijkstra.h"
 
 #ifdef RASPBERRY
 #include "hardware.h"
@@ -17,6 +18,7 @@ typedef struct
 {
 	int potentzia_limitea;
 	int interbaloa;
+	Norabidea aurrea;
 	Motorea mot_eskubi;
 	Motorea mot_ezkerra;
 } Kotxea;
@@ -25,6 +27,7 @@ typedef struct
 
 static bool kotxea_init(const Kotxea *kotxea);
 static void kotxea_itzali(void);
+
 static void kotxea_ezkerreko_motorra_azeleratu(Kotxea *kotxea);
 static void kotxea_ezkerreko_motorra_frenatu(Kotxea *kotxea);
 static void kotxea_eskubiko_motorra_azeleratu(Kotxea *kotxea);
@@ -34,6 +37,10 @@ static PinEgoera kotxea_ezkerreko_ldr_irakurri(void);
 static PinEgoera kotxea_eskubiko_ldr_irakurri(void);
 
 static bool kotxea_nodo_aurkitu(void);
+
+static void kotxea_giratu_eskubira(Kotxea *kotxea);
+static void kotxea_giratu_ezkerrera(Kotxea *kotxea);
+static void kotxea_giratu_aurrera(Kotxea *kotxea);
 
 /* FUNTZIO PUBLIKOEN INPLEMENTAZIOA */
 
@@ -96,7 +103,6 @@ bool kotxea_urruneko_kontrola(void)
 			case 'a':
 				// Ezkerrera
 				kotxea_ezkerreko_motorra_azeleratu(&kotxea);
-
 				break;
 			case 'd':
 				// Eskubira
@@ -154,6 +160,160 @@ bool kotxea_marra_jarraitu(void)
 
 	kotxea_itzali();
 	OHARRA("Helmugara iritsita.");
+
+	return true;
+}
+
+bool kotxea_mapa(void)
+{
+	// Hemen dijsktra jun behar da
+	int tamaina = 5;
+	Norabidea norab[5] = {Iparraldea, Ekialdea, Iparraldea, Mendebaldea, Inora};
+
+	Kotxea kotxea = {
+		.potentzia_limitea = 30,
+		.interbaloa = kotxea.potentzia_limitea - 1,
+		.aurrea = Iparraldea,
+	};
+
+	if (kotxea_init(&kotxea) == false)
+	{
+		ERROREA("kotxea_mapa(): Kotxea ezin izan da prestatu.");
+		return false;
+	}
+
+	for (int i = 0; i < tamaina; i++)
+	{
+		// Marra zuzena, nodo bat aurkitu arte
+		while (kotxea_nodo_aurkitu() == false)
+		{
+			if (kotxea_ezkerreko_ldr_irakurri() == Gaitu)
+			{
+				kotxea_ezkerreko_motorra_frenatu(&kotxea);
+			}
+			else
+			{
+				kotxea_ezkerreko_motorra_azeleratu(&kotxea);
+			}
+
+			if (kotxea_eskubiko_ldr_irakurri() == Gaitu)
+			{
+				kotxea_eskubiko_motorra_frenatu(&kotxea);
+			}
+			else
+			{
+				kotxea_eskubiko_motorra_azeleratu(&kotxea);
+			}
+		}
+
+		// Ikusi nora joan behar duen
+		switch (norab[i])
+		{
+		case Iparraldea:
+		{
+			switch (kotxea.aurrea)
+			{
+			case Iparraldea:
+				kotxea_giratu_aurrera(&kotxea);
+				break;
+			case Mendebaldea:
+				kotxea_giratu_ezkerrera(&kotxea);
+				break;
+			case Ekialdea:
+				kotxea_giratu_eskubira(&kotxea);
+				break;
+			default:
+				ABISUA("ERROREA EZIN DA HONA JOAN");
+				break;
+			}
+			break;
+		}
+		case Hegoaldea:
+		{
+			switch (kotxea.aurrea)
+			{
+			case Hegoaldea:
+				kotxea_giratu_aurrera(&kotxea);
+				break;
+			case Ekialdea:
+				kotxea_giratu_ezkerrera(&kotxea);
+				break;
+			case Mendebaldea:
+				kotxea_giratu_eskubira(&kotxea);
+				break;
+			default:
+				ABISUA("ERROREA EZIN DA HONA JOAN");
+				break;
+			}
+			break;
+		}
+		case Ekialdea:
+		{
+			switch (kotxea.aurrea)
+			{
+			case Ekialdea:
+				kotxea_giratu_aurrera(&kotxea);
+				break;
+			case Iparraldea:
+				kotxea_giratu_ezkerrera(&kotxea);
+				break;
+			case Hegoaldea:
+				kotxea_giratu_eskubira(&kotxea);
+				break;
+			default:
+				ABISUA("ERROREA EZIN DA HONA JOAN");
+				break;
+			}
+			break;
+		}
+		case Mendebaldea:
+		{
+			switch (kotxea.aurrea)
+			{
+			case Mendebaldea:
+				kotxea_giratu_aurrera(&kotxea);
+				break;
+			case Hegoaldea:
+				kotxea_giratu_ezkerrera(&kotxea);
+				break;
+			case Iparraldea:
+				kotxea_giratu_eskubira(&kotxea);
+				break;
+			default:
+				ABISUA("ERROREA EZIN DA HONA JOAN");
+				break;
+			}
+			break;
+		}
+		default:
+			break;
+		}
+
+		// Jarri kotxearen direkzio berria
+		kotxea.aurrea = norab[i];
+	}
+
+	// Azken rekta
+	while (kotxea_nodo_aurkitu() == false)
+	{
+		if (kotxea_ezkerreko_ldr_irakurri() == Gaitu)
+		{
+			kotxea_ezkerreko_motorra_frenatu(&kotxea);
+		}
+		else
+		{
+			kotxea_ezkerreko_motorra_azeleratu(&kotxea);
+		}
+
+		if (kotxea_eskubiko_ldr_irakurri() == Gaitu)
+		{
+			kotxea_eskubiko_motorra_frenatu(&kotxea);
+		}
+		else
+		{
+			kotxea_eskubiko_motorra_azeleratu(&kotxea);
+		}
+	}
 
 	return true;
 }
@@ -249,4 +409,58 @@ static PinEgoera kotxea_eskubiko_ldr_irakurri(void)
 static bool kotxea_nodo_aurkitu(void)
 {
 	return (kotxea_ezkerreko_ldr_irakurri() == Gaitu && kotxea_eskubiko_ldr_irakurri() == Gaitu);
+}
+
+static void kotxea_giratu_eskubira(Kotxea *kotxea)
+{
+	kotxea_eskubiko_motorra_frenatu(kotxea);
+	// Lehenengo zinta pasa
+	while (kotxea_ezkerreko_ldr_irakurri() == Gaitu)
+	{
+		kotxea_ezkerreko_motorra_azeleratu(kotxea);
+	}
+
+	// Zinten arteko distantzia
+	while (kotxea_ezkerreko_ldr_irakurri() == Ezgaitu)
+	{
+		kotxea_ezkerreko_motorra_azeleratu(kotxea);
+	}
+
+	// Bigarren zinta pasa
+	while (kotxea_ezkerreko_ldr_irakurri() == Gaitu)
+	{
+		kotxea_ezkerreko_motorra_azeleratu(kotxea);
+	}
+}
+
+static void kotxea_giratu_ezkerrera(Kotxea *kotxea)
+{
+	kotxea_ezkerreko_motorra_frenatu(kotxea);
+	// Lehenengo zinta pasa
+	while (kotxea_eskubiko_ldr_irakurri() == Gaitu)
+	{
+		kotxea_eskubiko_motorra_azeleratu(kotxea);
+	}
+
+	// Zinten arteko distantzia
+	while (kotxea_eskubiko_ldr_irakurri() == Ezgaitu)
+	{
+		kotxea_eskubiko_motorra_azeleratu(kotxea);
+	}
+
+	// Bigarren zinta pasa
+	while (kotxea_eskubiko_ldr_irakurri() == Gaitu)
+	{
+		kotxea_eskubiko_motorra_azeleratu(kotxea);
+	}
+}
+
+static void kotxea_giratu_aurrera(Kotxea *kotxea)
+{
+	// Zinta pasa
+	while (kotxea_nodo_aurkitu() == true)
+	{
+		kotxea_eskubiko_motorra_azeleratu(kotxea);
+		kotxea_ezkerreko_motorra_azeleratu(kotxea);
+	}
 }
