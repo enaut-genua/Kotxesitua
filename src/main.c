@@ -2,6 +2,7 @@
 
 #include "input.h"
 #include "kotxea.h"
+#include "hardware.h"
 
 int main(void)
 {
@@ -16,6 +17,8 @@ int main(void)
 		ERROREA("Ezin izan da marra jarraitu.");
 		return EXIT_FAILURE;
 	}
+
+	
 
 	return EXIT_SUCCESS;
 }
