@@ -23,7 +23,7 @@ typedef struct
 
 /* FUNTZIO PRIBATUAK */
 
-static bool kotxea_init(Kotxea *kotxea);
+static bool kotxea_init(const Kotxea *kotxea);
 static void kotxea_ezkerreko_motorra_azeleratu(Kotxea *kotxea);
 static void kotxea_ezkerreko_motorra_frenatu(Kotxea *kotxea);
 static void kotxea_eskubiko_motorra_azeleratu(Kotxea *kotxea);
@@ -36,7 +36,7 @@ static bool kotxea_nodo_aurkitu(void);
 
 /* FUNTZIO PUBLIKOEN INPLEMENTAZIOA */
 
-bool kotxea_init(Kotxea *kotxea)
+bool kotxea_init(const Kotxea *kotxea)
 {
 	bool ret = true;
 
