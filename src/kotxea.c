@@ -42,6 +42,8 @@ bool kotxea_init(const Kotxea *kotxea)
 
 #ifdef RASPBERRY
 	ret = hardware_init(kotxea->potentzia_limitea);
+#else
+	BALIOA_ERABILI_GABE(kotxea);
 #endif
 
 	OHARRA("Kotxea prest.");
@@ -82,11 +84,12 @@ bool kotxea_urruneko_kontrola(void)
 				break;
 			case 'a':
 				// Ezkerrera
-				kotxea_eskubiko_motorra_azeleratu(&kotxea);
+				kotxea_ezkerreko_motorra_azeleratu(&kotxea);
+
 				break;
 			case 'd':
 				// Eskubira
-				kotxea_ezkerreko_motorra_azeleratu(&kotxea);
+				kotxea_eskubiko_motorra_azeleratu(&kotxea);
 				break;
 			}
 		}
@@ -116,7 +119,8 @@ bool kotxea_marra_jarraitu(void)
 		return false;
 	}
 
-	while (kotxea_nodo_aurkitu() == false)
+	kotxea_nodo_aurkitu();
+	while (/*kotxea_nodo_aurkitu() == false*/ true)
 	{
 		if (kotxea_ezkerreko_ldr_irakurri() == Gaitu)
 		{
@@ -185,7 +189,7 @@ static void kotxea_eskubiko_motorra_frenatu(Kotxea *kotxea)
 	OHARRA("Eskubiko motorra frenatu.");
 
 	kotxea->mot_eskubi.azeleratu = false;
-	kotxea->mot_eskubi.potentzia_balioa -= (kotxea->mot_eskubi.potentzia_balioa < kotxea->potentzia_limitea) ? kotxea->interbaloa : 0;
+	kotxea->mot_eskubi.potentzia_balioa -= (kotxea->mot_eskubi.potentzia_balioa > 0) ? kotxea->interbaloa : 0;
 
 #ifdef RASPBERRY
 	hardware_eskubiko_motorra_potentzia(kotxea->mot_eskubi.potentzia_balioa);
