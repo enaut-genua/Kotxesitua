@@ -168,8 +168,8 @@ bool kotxea_marra_jarraitu(void)
 bool kotxea_mapa(void)
 {
 	// Hemen dijsktra jun behar da
-	Norabidea norab[] = {Ekialdea, Iparraldea, Ekialdea, Iparraldea}; // Hasierako puntura buelta
-	int tamaina = sizeof(norab) / sizeof(Norabidea);
+	int tamaina = 0;
+	Norabidea *norab = dijkstra_main(&tamaina);
 
 	Kotxea kotxea = {
 		.potentzia_limitea = 100,
