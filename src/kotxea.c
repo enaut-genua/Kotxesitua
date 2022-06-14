@@ -129,7 +129,7 @@ bool kotxea_marra_jarraitu(void)
 {
 	OHARRA("Marra bat jarraitu.");
 
-	Kotxea kotxea = {.potentzia_limitea = 30, .interbaloa = kotxea.potentzia_limitea - 1};
+	Kotxea kotxea = {.potentzia_limitea = 35, .interbaloa = kotxea.potentzia_limitea - 1};
 
 	if (kotxea_init(&kotxea) == false)
 	{
@@ -168,12 +168,12 @@ bool kotxea_marra_jarraitu(void)
 bool kotxea_mapa(void)
 {
 	// Hemen dijsktra jun behar da
-	int tamaina = 3;
-	Norabidea norab[6] = {Mendebaldea, Iparraldea, Mendebaldea, Hegoaldea, Hegoaldea}; // Hasierako puntura buelta
+	Norabidea norab[] = {Ekialdea, Iparraldea, Ekialdea, Iparraldea}; // Hasierako puntura buelta
+	int tamaina = sizeof(norab) / sizeof(Norabidea);
 
 	Kotxea kotxea = {
-		.potentzia_limitea = 40,
-		.interbaloa = kotxea.potentzia_limitea - 1,
+		.potentzia_limitea = 100,
+		.interbaloa = kotxea.potentzia_limitea,
 		.aurrea = Iparraldea,
 	};
 
@@ -217,10 +217,10 @@ bool kotxea_mapa(void)
 			case Iparraldea:
 				kotxea_giratu_aurrera(&kotxea);
 				break;
-			case Mendebaldea:
+			case Ekialdea:
 				kotxea_giratu_ezkerrera(&kotxea);
 				break;
-			case Ekialdea:
+			case Mendebaldea:
 				kotxea_giratu_eskubira(&kotxea);
 				break;
 			default:
@@ -236,10 +236,10 @@ bool kotxea_mapa(void)
 			case Hegoaldea:
 				kotxea_giratu_aurrera(&kotxea);
 				break;
-			case Ekialdea:
+			case Mendebaldea:
 				kotxea_giratu_ezkerrera(&kotxea);
 				break;
-			case Mendebaldea:
+			case Ekialdea:
 				kotxea_giratu_eskubira(&kotxea);
 				break;
 			default:
@@ -255,10 +255,10 @@ bool kotxea_mapa(void)
 			case Ekialdea:
 				kotxea_giratu_aurrera(&kotxea);
 				break;
-			case Iparraldea:
+			case Hegoaldea:
 				kotxea_giratu_ezkerrera(&kotxea);
 				break;
-			case Hegoaldea:
+			case Iparraldea:
 				kotxea_giratu_eskubira(&kotxea);
 				break;
 			default:
@@ -274,10 +274,10 @@ bool kotxea_mapa(void)
 			case Mendebaldea:
 				kotxea_giratu_aurrera(&kotxea);
 				break;
-			case Hegoaldea:
+			case Iparraldea:
 				kotxea_giratu_ezkerrera(&kotxea);
 				break;
-			case Iparraldea:
+			case Hegoaldea:
 				kotxea_giratu_eskubira(&kotxea);
 				break;
 			default:
@@ -294,8 +294,7 @@ bool kotxea_mapa(void)
 		kotxea.aurrea = norab[i];
 	}
 
-	// Azken rekta
-	while (kotxea_nodo_aurkitu() == false)
+	while (true)
 	{
 		if (kotxea_ezkerreko_ldr_irakurri() == Gaitu)
 		{
@@ -315,6 +314,12 @@ bool kotxea_mapa(void)
 			kotxea_eskubiko_motorra_azeleratu(&kotxea);
 		}
 	}
+
+	kotxea_eskubiko_motorra_frenatu(&kotxea);
+	kotxea_ezkerreko_motorra_frenatu(&kotxea);
+
+	hardware_ezkerreko_motorra_potentzia(0);
+	hardware_eskubiko_motorra_potentzia(0);
 
 	return true;
 }
@@ -414,53 +419,26 @@ static bool kotxea_nodo_aurkitu(void)
 
 static void kotxea_giratu_eskubira(Kotxea *kotxea)
 {
+	// Frenatu
 	kotxea_eskubiko_motorra_frenatu(kotxea);
-	// Lehenengo zinta pasa
-	// while (kotxea_ezkerreko_ldr_irakurri() == Gaitu)
-	// {
-	// 	kotxea_ezkerreko_motorra_azeleratu(kotxea);
-	// }
-
-	// // Zinten arteko distantzia
-	// while (kotxea_ezkerreko_ldr_irakurri() == Ezgaitu)
-	// {
-	// 	kotxea_ezkerreko_motorra_azeleratu(kotxea);
-	// }
-
-	// // Bigarren zinta pasa
-	// while (kotxea_ezkerreko_ldr_irakurri() == Gaitu)
-	// {
-	// 	kotxea_ezkerreko_motorra_azeleratu(kotxea);
-	// }
+	kotxea_ezkerreko_motorra_frenatu(kotxea);
 
 	kotxea_ezkerreko_motorra_azeleratu(kotxea);
-
-	sleep(1);
+	kotxea_eskubiko_motorra_frenatu(kotxea);
+	struct timespec denb = {.tv_sec = 0, .tv_nsec = 750000000};
+	nanosleep(&denb, NULL);
 }
 
 static void kotxea_giratu_ezkerrera(Kotxea *kotxea)
 {
+	// Frenatu
+	kotxea_eskubiko_motorra_frenatu(kotxea);
 	kotxea_ezkerreko_motorra_frenatu(kotxea);
-	// Lehenengo zinta pasa
-	// while (kotxea_eskubiko_ldr_irakurri() == Gaitu)
-	// {
-	// 	kotxea_eskubiko_motorra_azeleratu(kotxea);
-	// }
-
-	// // Zinten arteko distantzia
-	// while (kotxea_eskubiko_ldr_irakurri() == Ezgaitu)
-	// {
-	// 	kotxea_eskubiko_motorra_azeleratu(kotxea);
-	// }
-
-	// // Bigarren zinta pasa
-	// while (kotxea_eskubiko_ldr_irakurri() == Gaitu)
-	// {
-	// 	kotxea_eskubiko_motorra_azeleratu(kotxea);
-	// }
 
 	kotxea_eskubiko_motorra_azeleratu(kotxea);
-	sleep(1);
+	kotxea_ezkerreko_motorra_frenatu(kotxea);
+	struct timespec denb = {.tv_sec = 1, .tv_nsec = 000000000};
+	nanosleep(&denb, NULL);
 }
 
 static void kotxea_giratu_aurrera(Kotxea *kotxea)

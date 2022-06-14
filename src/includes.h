@@ -1,6 +1,8 @@
 #ifndef INCLUDES_H
 #define INCLUDES_H
 
+#define _POSIX_C_SOURCE 199309L
+
 /* C STD */
 #include <errno.h>
 #include <stdbool.h>
