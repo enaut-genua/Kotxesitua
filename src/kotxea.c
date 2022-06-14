@@ -294,7 +294,7 @@ bool kotxea_mapa(void)
 		kotxea.aurrea = norab[i];
 	}
 
-	while (true)
+	while (kotxea_nodo_aurkitu() == false)
 	{
 		if (kotxea_ezkerreko_ldr_irakurri() == Gaitu)
 		{
