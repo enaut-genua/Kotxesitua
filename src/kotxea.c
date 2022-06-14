@@ -318,8 +318,10 @@ bool kotxea_mapa(void)
 	kotxea_eskubiko_motorra_frenatu(&kotxea);
 	kotxea_ezkerreko_motorra_frenatu(&kotxea);
 
+#ifdef RASPBERRY
 	hardware_ezkerreko_motorra_potentzia(0);
 	hardware_eskubiko_motorra_potentzia(0);
+#endif
 
 	return true;
 }
