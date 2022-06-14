@@ -2,7 +2,6 @@
 
 #include "input.h"
 #include "kotxea.h"
-#include "hardware.h"
 
 int main(void)
 {
