@@ -33,6 +33,10 @@ static Norabidea **norab_matr = NULL;
 
 // Funtzio pribatuak
 static void dijsktra_kargatu_mapa(Mapa *mapa);
+static int **dijkstra_matrizea_sortu(int erpin_kop);
+static void dijkstra_matrizea_borratu(int **matrizea, int erpin_kop);
+static void dijkstra_matrize_pisua_bete(int **matrizea, Ertza *ertza, int ertz_kop);
+static void dijkstra_matrize_orientazioa_bete(int **matrizea, Ertza *ertza, int ertz_kop);
 
 // Funtzio publikoak
 
@@ -40,7 +44,9 @@ void dijsktra_init(void)
 {
 	mapa = (Mapa *)malloc(sizeof(Mapa));
 	dijsktra_kargatu_mapa(mapa);
-	//pisu_matr = 
+	pisu_matr = dijkstra_matrizea_sortu(mapa->erpin_kopurua);
+	norab_matr = (Norabidea **)dijkstra_matrizea_sortu(mapa->erpin_kopurua);
+
 }
 
 void dijkstra_borratu(void)
@@ -99,4 +105,27 @@ static void dijsktra_kargatu_mapa(Mapa *mapa)
 		}
 	}
 	mapa->ertzak = ertzak;
+}
+
+static int **dijkstra_matrizea_sortu(int erpin_kop)
+{
+	int **matrizea = (int **)calloc(erpin_kop, sizeof(int *));
+	if (matrizea != NULL)
+	{
+		for (int i = 0; i < erpin_kop; i++)
+		{
+			matrizea[i] = (int *)calloc(erpin_kop, sizeof(int));
+		}
+	}
+
+	return matrizea;
+}
+
+static void dijkstra_matrizea_borratu(int **matrizea, int erpin_kop)
+{
+	for (int i = 0; i < erpin_kop; i++)
+	{
+		free(matrizea[i]);
+	}
+	free(matrizea);
 }

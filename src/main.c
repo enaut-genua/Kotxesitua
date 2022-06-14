@@ -6,19 +6,20 @@
 
 int main(void)
 {
-	// if (kotxea_urruneko_kontrola() == false)
-	// {
-	// 	ERROREA("Ezin izan da urruneko kontrola hasi.");
-	// 	return EXIT_FAILURE;
-	// }
-
-	if (kotxea_marra_jarraitu() == false)
+	if (kotxea_urruneko_kontrola() == false)
 	{
-		ERROREA("Ezin izan da marra jarraitu.");
+		ERROREA("Ezin izan da urruneko kontrola hasi.");
 		return EXIT_FAILURE;
 	}
 
-	
+	// if (kotxea_marra_jarraitu() == false)
+	// {
+	// 	ERROREA("Ezin izan da marra jarraitu.");
+	// 	return EXIT_FAILURE;
+	// }
+
+	// kotxea_mapa();
+
 
 	return EXIT_SUCCESS;
 }

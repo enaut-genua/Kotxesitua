@@ -88,6 +88,7 @@ bool kotxea_urruneko_kontrola(void)
 	}
 
 	int c = 0;
+
 	while (c != 'e')
 	{
 		while (input_tekla_sakatu_da())
@@ -102,11 +103,11 @@ bool kotxea_urruneko_kontrola(void)
 				break;
 			case 'a':
 				// Ezkerrera
-				kotxea_ezkerreko_motorra_azeleratu(&kotxea);
+				kotxea_eskubiko_motorra_azeleratu(&kotxea);
 				break;
 			case 'd':
 				// Eskubira
-				kotxea_eskubiko_motorra_azeleratu(&kotxea);
+				kotxea_ezkerreko_motorra_azeleratu(&kotxea);
 				break;
 			}
 		}
@@ -167,11 +168,11 @@ bool kotxea_marra_jarraitu(void)
 bool kotxea_mapa(void)
 {
 	// Hemen dijsktra jun behar da
-	int tamaina = 6;
-	Norabidea norab[6] = {Iparraldea, Ekialdea, Iparraldea, Mendebaldea, Hegoaldea, Hegoaldea}; // Hasierako puntura buelta
+	int tamaina = 3;
+	Norabidea norab[6] = {Mendebaldea, Iparraldea, Mendebaldea, Hegoaldea, Hegoaldea}; // Hasierako puntura buelta
 
 	Kotxea kotxea = {
-		.potentzia_limitea = 30,
+		.potentzia_limitea = 40,
 		.interbaloa = kotxea.potentzia_limitea - 1,
 		.aurrea = Iparraldea,
 	};
@@ -352,7 +353,7 @@ static void kotxea_eskubiko_motorra_azeleratu(Kotxea *kotxea)
 	kotxea->mot_eskubi.potentzia_balioa += (kotxea->mot_eskubi.potentzia_balioa < kotxea->potentzia_limitea) ? kotxea->interbaloa : 0;
 
 #ifdef RASPBERRY
-	hardware_eskubiko_motorra_potentzia(kotxea->mot_ezkerra.potentzia_balioa);
+	hardware_eskubiko_motorra_potentzia(kotxea->mot_eskubi.potentzia_balioa);
 #endif
 }
 
@@ -415,44 +416,51 @@ static void kotxea_giratu_eskubira(Kotxea *kotxea)
 {
 	kotxea_eskubiko_motorra_frenatu(kotxea);
 	// Lehenengo zinta pasa
-	while (kotxea_ezkerreko_ldr_irakurri() == Gaitu)
-	{
-		kotxea_ezkerreko_motorra_azeleratu(kotxea);
-	}
+	// while (kotxea_ezkerreko_ldr_irakurri() == Gaitu)
+	// {
+	// 	kotxea_ezkerreko_motorra_azeleratu(kotxea);
+	// }
 
-	// Zinten arteko distantzia
-	while (kotxea_ezkerreko_ldr_irakurri() == Ezgaitu)
-	{
-		kotxea_ezkerreko_motorra_azeleratu(kotxea);
-	}
+	// // Zinten arteko distantzia
+	// while (kotxea_ezkerreko_ldr_irakurri() == Ezgaitu)
+	// {
+	// 	kotxea_ezkerreko_motorra_azeleratu(kotxea);
+	// }
 
-	// Bigarren zinta pasa
-	while (kotxea_ezkerreko_ldr_irakurri() == Gaitu)
-	{
-		kotxea_ezkerreko_motorra_azeleratu(kotxea);
-	}
+	// // Bigarren zinta pasa
+	// while (kotxea_ezkerreko_ldr_irakurri() == Gaitu)
+	// {
+	// 	kotxea_ezkerreko_motorra_azeleratu(kotxea);
+	// }
+
+	kotxea_ezkerreko_motorra_azeleratu(kotxea);
+
+	sleep(1);
 }
 
 static void kotxea_giratu_ezkerrera(Kotxea *kotxea)
 {
 	kotxea_ezkerreko_motorra_frenatu(kotxea);
 	// Lehenengo zinta pasa
-	while (kotxea_eskubiko_ldr_irakurri() == Gaitu)
-	{
-		kotxea_eskubiko_motorra_azeleratu(kotxea);
-	}
+	// while (kotxea_eskubiko_ldr_irakurri() == Gaitu)
+	// {
+	// 	kotxea_eskubiko_motorra_azeleratu(kotxea);
+	// }
 
-	// Zinten arteko distantzia
-	while (kotxea_eskubiko_ldr_irakurri() == Ezgaitu)
-	{
-		kotxea_eskubiko_motorra_azeleratu(kotxea);
-	}
+	// // Zinten arteko distantzia
+	// while (kotxea_eskubiko_ldr_irakurri() == Ezgaitu)
+	// {
+	// 	kotxea_eskubiko_motorra_azeleratu(kotxea);
+	// }
 
-	// Bigarren zinta pasa
-	while (kotxea_eskubiko_ldr_irakurri() == Gaitu)
-	{
-		kotxea_eskubiko_motorra_azeleratu(kotxea);
-	}
+	// // Bigarren zinta pasa
+	// while (kotxea_eskubiko_ldr_irakurri() == Gaitu)
+	// {
+	// 	kotxea_eskubiko_motorra_azeleratu(kotxea);
+	// }
+
+	kotxea_eskubiko_motorra_azeleratu(kotxea);
+	sleep(1);
 }
 
 static void kotxea_giratu_aurrera(Kotxea *kotxea)
