@@ -168,7 +168,7 @@ bool kotxea_marra_jarraitu(void)
 bool kotxea_mapa(void)
 {
 	// Hemen dijsktra jun behar da
-	int tamainaa = 0;
+	int tamaina = 0;
 	Norabidea *norab = dijkstra_main(&tamainaa);
 
 	Kotxea kotxea = {
