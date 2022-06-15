@@ -171,6 +171,8 @@ bool kotxea_mapa(void)
 	int tamaina = 0;
 	Norabidea *norab = dijkstra_main(&tamaina);
 
+	tamaina -= 1;
+
 	Kotxea kotxea = {
 		.potentzia_limitea = 100,
 		.interbaloa = kotxea.potentzia_limitea,

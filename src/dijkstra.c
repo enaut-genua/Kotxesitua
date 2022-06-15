@@ -77,7 +77,7 @@ PATH *dijkstra(int **matrizea, int erpin_kopurua, int hasierako_puntua, int buka
 }
 int *dijkstra_bidea_pausoka(int tamaina, int **matrize_orientazioa, int *bidea)
 {
-	Norabidea *instrukzioak = (Norabidea *)calloc((tamaina), sizeof(Norabidea));
+	Norabidea *instrukzioak = (Norabidea *)calloc((tamaina - 1), sizeof(Norabidea));
 	if (instrukzioak)
 	{
 		for (int k = 0; k < (tamaina); k++)
@@ -180,7 +180,7 @@ MAPA *funtzioa_irakurri_binari_artxiboa()
 		exit(EXIT_FAILURE);
 	}
 	FILE *irakurritako_artxiboa = NULL;
-	irakurritako_artxiboa = fopen("dijkstrak.mapa", "rb");
+	irakurritako_artxiboa = fopen("dijkstra.mapa", "rb");
 	uint8_t *mapa_struct_byte = (uint8_t *)mapa;
 	for (int i = 0; i < 16; i++)
 	{
