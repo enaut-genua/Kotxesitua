@@ -205,7 +205,6 @@ MAPA *funtzioa_irakurri_binari_artxiboa()
 			{
 				if (kopia)
 				{
-					printf("4");
 					kopia->hurrengo_ertza = (ERTZA *)malloc(sizeof(ERTZA));
 					kopia = kopia->hurrengo_ertza;
 					mapa_ertzak_byte = (uint8_t *)kopia;
