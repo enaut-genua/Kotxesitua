@@ -137,7 +137,7 @@ bool kotxea_marra_jarraitu(void)
 		return false;
 	}
 
-	kotxea_nodo_aurkitu();
+	BALIOA_ERABILI_GABE(kotxea_nodo_aurkitu());
 	while (/*kotxea_nodo_aurkitu() == false*/ true)
 	{
 		if (kotxea_ezkerreko_ldr_irakurri() == Gaitu)
