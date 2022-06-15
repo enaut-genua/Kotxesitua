@@ -1,0 +1,11 @@
+target_sources(
+	${PROJECT_NAME}
+		PRIVATE
+			funtzioak_binario_artxiboa.c
+			funtzioak_binario_artxiboa.h
+			main.c
+			mapa_editatu_eta_sortu.c
+			mapa_editatu_eta_sortu.h
+			menu.c
+			menu.h
+)
