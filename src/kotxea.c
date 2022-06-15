@@ -44,7 +44,7 @@ static void kotxea_giratu_aurrera(Kotxea *kotxea);
 
 /* FUNTZIO PUBLIKOEN INPLEMENTAZIOA */
 
-bool kotxea_init(const Kotxea *kotxea)
+static bool kotxea_init(const Kotxea *kotxea)
 {
 	bool ret = true;
 

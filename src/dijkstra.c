@@ -174,29 +174,31 @@ void matrizea_zuzendu_orientazioa(int **matrizea, int erpin_kop)
 
 MAPA *funtzioa_irakurri_binari_artxiboa()
 {
-	
-	MAPA* mapa = (MAPA*)malloc(sizeof(MAPA));
+
+	MAPA *mapa = (MAPA *)malloc(sizeof(MAPA));
 	if (mapa == NULL)
 	{
 		exit(EXIT_FAILURE);
 	}
-	FILE* irakurritako_artxiboa = NULL;
+	FILE *irakurritako_artxiboa = NULL;
 	irakurritako_artxiboa = fopen("dijkstra.mapa", "rb");
-	uint8_t* mapa_struct_byte = (uint8_t*)mapa;
-	for (int i = 0; i < 16; i++) {
+	uint8_t *mapa_struct_byte = (uint8_t *)mapa;
+	for (int i = 0; i < 16; i++)
+	{
 		fread(mapa_struct_byte + i, sizeof(uint8_t), 1, irakurritako_artxiboa);
 	}
-	ERTZA* ertzak = (ERTZA*)malloc(sizeof(ERTZA));
+	ERTZA *ertzak = (ERTZA *)malloc(sizeof(ERTZA));
 	if (ertzak == NULL)
 	{
 		exit(EXIT_FAILURE);
 	}
-	ERTZA* kopia = ertzak;
-	if (kopia) {
-		uint8_t* mapa_ertzak_byte = (uint8_t*)kopia;
+	ERTZA *kopia = ertzak;
+	if (kopia)
+	{
+		uint8_t *mapa_ertzak_byte = (uint8_t *)kopia;
 		for (int j = 0; j < mapa->ertz_kopurua; j++)
 		{
-			for (int i = 0; i < (sizeof(int) * 4); i++)
+			for (size_t i = 0; i < (sizeof(int) * 4); i++)
 			{
 				fread(mapa_ertzak_byte + i, sizeof(uint8_t), 1, irakurritako_artxiboa);
 			}
@@ -204,9 +206,9 @@ MAPA *funtzioa_irakurri_binari_artxiboa()
 			{
 				if (kopia)
 				{
-					kopia->hurrengo_ertza = (ERTZA*)malloc(sizeof(ERTZA));
+					kopia->hurrengo_ertza = (ERTZA *)malloc(sizeof(ERTZA));
 					kopia = kopia->hurrengo_ertza;
-					mapa_ertzak_byte = (uint8_t*)kopia;
+					mapa_ertzak_byte = (uint8_t *)kopia;
 				}
 			}
 			else
@@ -261,17 +263,17 @@ void liberatu_matrizea(int **matrizea, int erpin_kop)
 
 Norabidea *dijkstra_main(int *tamainaa)
 {
-    
-	MAPA *mapa = funtzioa_irakurri_binari_artxiboa();	
-    											   // inportamos el mapa
-	PATH *bidea;	
-    																					   // creamos una struct para guardar el camino
-	int **matrizea = sortu_matrizea(mapa->erpin_kopurua);												   // creamos una matriz de peso vacia
-	int **matrize_orienta = sortu_matrizea(mapa->erpin_kopurua);										   // creamos una matriz de orientazion vacia
-	bete_matrize_pisua(matrizea, mapa->ertzak, mapa->ertz_kopurua);										   // le a�adimos los datos importados del mapa a la matriz de peso
-	bete_matrize_orientazioa(matrize_orienta, mapa->ertzak, mapa->ertz_kopurua, mapa->erpin_kopurua);	  // le a�adimos los datos importados del mapa a la matriz de orientazion
-	bidea = dijkstra(matrizea, mapa->erpin_kopurua, (mapa->puntu_bukaera - 1), (mapa->puntu_hasiera - 1)); // hacemos el proceso de dijkstra
-	Norabidea *instrukzioak = (Norabidea*)dijkstra_bidea_pausoka(bidea->tamaina, matrize_orienta, bidea->path);		   // sabiendo los puntos por los que pasa, hacemos una array de instrucciones
+
+	MAPA *mapa = funtzioa_irakurri_binari_artxiboa();
+	// inportamos el mapa
+	PATH *bidea;
+	// creamos una struct para guardar el camino
+	int **matrizea = sortu_matrizea(mapa->erpin_kopurua);														 // creamos una matriz de peso vacia
+	int **matrize_orienta = sortu_matrizea(mapa->erpin_kopurua);												 // creamos una matriz de orientazion vacia
+	bete_matrize_pisua(matrizea, mapa->ertzak, mapa->ertz_kopurua);												 // le a�adimos los datos importados del mapa a la matriz de peso
+	bete_matrize_orientazioa(matrize_orienta, mapa->ertzak, mapa->ertz_kopurua, mapa->erpin_kopurua);			 // le a�adimos los datos importados del mapa a la matriz de orientazion
+	bidea = dijkstra(matrizea, mapa->erpin_kopurua, (mapa->puntu_bukaera - 1), (mapa->puntu_hasiera - 1));		 // hacemos el proceso de dijkstra
+	Norabidea *instrukzioak = (Norabidea *)dijkstra_bidea_pausoka(bidea->tamaina, matrize_orienta, bidea->path); // sabiendo los puntos por los que pasa, hacemos una array de instrucciones
 	*tamainaa = bidea->tamaina;
 	liberatu_matrizea(matrizea, mapa->erpin_kopurua);
 	liberatu_matrizea(matrize_orienta, mapa->erpin_kopurua);
