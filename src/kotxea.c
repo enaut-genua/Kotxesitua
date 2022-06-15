@@ -129,7 +129,7 @@ bool kotxea_marra_jarraitu(void)
 {
 	OHARRA("Marra bat jarraitu.");
 
-	Kotxea kotxea = {.potentzia_limitea = 35, .interbaloa = kotxea.potentzia_limitea - 1};
+	Kotxea kotxea = {.potentzia_limitea = 30, .interbaloa = kotxea.potentzia_limitea - 1};
 
 	if (kotxea_init(&kotxea) == false)
 	{
@@ -168,10 +168,8 @@ bool kotxea_marra_jarraitu(void)
 bool kotxea_mapa(void)
 {
 	// Hemen dijsktra jun behar da
-	int tamaina = 0;
+	int tamaina = 1;
 	Norabidea *norab = dijkstra_main(&tamaina);
-
-	tamaina -= 1;
 
 	Kotxea kotxea = {
 		.potentzia_limitea = 100,
@@ -225,6 +223,9 @@ bool kotxea_mapa(void)
 			case Mendebaldea:
 				kotxea_giratu_eskubira(&kotxea);
 				break;
+			case Inora:
+				printf("Inora!");
+				break;
 			default:
 				ABISUA("ERROREA EZIN DA HONA JOAN");
 				break;
@@ -243,6 +244,9 @@ bool kotxea_mapa(void)
 				break;
 			case Ekialdea:
 				kotxea_giratu_eskubira(&kotxea);
+				break;
+			case Inora:
+				printf("Inora!");
 				break;
 			default:
 				ABISUA("ERROREA EZIN DA HONA JOAN");
@@ -263,6 +267,9 @@ bool kotxea_mapa(void)
 			case Iparraldea:
 				kotxea_giratu_eskubira(&kotxea);
 				break;
+			case Inora:
+				printf("Inora!");
+				break;
 			default:
 				ABISUA("ERROREA EZIN DA HONA JOAN");
 				break;
@@ -281,6 +288,9 @@ bool kotxea_mapa(void)
 				break;
 			case Hegoaldea:
 				kotxea_giratu_eskubira(&kotxea);
+				break;
+			case Inora:
+				printf("Inora!");
 				break;
 			default:
 				ABISUA("ERROREA EZIN DA HONA JOAN");

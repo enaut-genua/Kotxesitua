@@ -44,7 +44,7 @@ void matrizea_zuzendu_orientazioa(int **matrizea, int erpin_kop);
 void bete_matrize_pisua(int **matrizea, ERTZA *ertza, int ertza_kop);
 
 PATH *dijkstra(int **matrizea, int erpin_kopurua, int hasierako_puntua, int bukaerako_puntua);
-int *dijkstra_bidea_pausoka(int tamaina, int **matrize_orientazioa, int *bidea);
+Norabidea *dijkstra_bidea_pausoka(int tamaina, int **matrize_orientazioa, int *bidea);
 
 void liberatu_matrizea(int **matrizea, int erpin_kop);
 

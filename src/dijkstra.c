@@ -50,7 +50,7 @@ PATH *dijkstra(int **matrizea, int erpin_kopurua, int hasierako_puntua, int buka
 		count++;
 	}
 	int *instrukzio_bidea = (int *)calloc(tamaina + 1, sizeof(int));
-	int tmp = 1;
+	int tmp = 0;
 	if (instrukzio_bidea)
 	{
 		// guarda el camino en un array
@@ -65,9 +65,9 @@ PATH *dijkstra(int **matrizea, int erpin_kopurua, int hasierako_puntua, int buka
 				{
 					tmp = tamaina;
 				}
+				tmp = tmp + 1;
 				instrukzio_bidea[tmp] = bidea_dijkstra[j];
 				j = bidea_dijkstra[j];
-				tmp = tmp + 1;
 			} while (j != hasierako_puntua);
 		}
 	}
@@ -75,9 +75,9 @@ PATH *dijkstra(int **matrizea, int erpin_kopurua, int hasierako_puntua, int buka
 	camino->tamaina = tmp;
 	return camino; // se devuelve la estructura con el camino y el tama�o de puntos recorridos
 }
-int *dijkstra_bidea_pausoka(int tamaina, int **matrize_orientazioa, int *bidea)
+Norabidea *dijkstra_bidea_pausoka(int tamaina, int **matrize_orientazioa, int *bidea)
 {
-	Norabidea *instrukzioak = (Norabidea *)calloc((tamaina - 1), sizeof(Norabidea));
+	Norabidea *instrukzioak = (Norabidea *)calloc((tamaina), sizeof(Norabidea));
 	if (instrukzioak)
 	{
 		for (int k = 0; k < (tamaina); k++)
@@ -102,7 +102,7 @@ int *dijkstra_bidea_pausoka(int tamaina, int **matrize_orientazioa, int *bidea)
 			}
 		}
 	}
-	return (int *)instrukzioak;
+	return instrukzioak;
 }
 
 void bete_matrize_pisua(int **matrizea, ERTZA *ertza, int ertza_kop)
@@ -205,6 +205,7 @@ MAPA *funtzioa_irakurri_binari_artxiboa()
 			{
 				if (kopia)
 				{
+					printf("4");
 					kopia->hurrengo_ertza = (ERTZA *)malloc(sizeof(ERTZA));
 					kopia = kopia->hurrengo_ertza;
 					mapa_ertzak_byte = (uint8_t *)kopia;
