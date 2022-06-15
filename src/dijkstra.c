@@ -30,7 +30,7 @@ PATH *dijkstra(int **matrizea, int erpin_kopurua, int hasierako_puntua, int buka
 	while (count < erpin_kopurua - 1)
 	{
 		distantzia_minimoa = INFINITO;
-		// haze el camino con menos peso
+		// hace el camino con menos peso
 		for (i = 0; i < erpin_kopurua; i++)
 			if (pisua[i] < distantzia_minimoa && !egondako_erpinetan[i])
 			{
@@ -38,7 +38,7 @@ PATH *dijkstra(int **matrizea, int erpin_kopurua, int hasierako_puntua, int buka
 				hurrengo_nodoa = i;
 				tamaina++;
 			}
-		// revisa si exise un camino mejor
+		// revisa si existe un camino mejor
 		egondako_erpinetan[hurrengo_nodoa] = 1;
 		for (i = 0; i < erpin_kopurua; i++)
 			if (!egondako_erpinetan[i])
