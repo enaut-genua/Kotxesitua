@@ -359,6 +359,17 @@ static void kotxea_ezkerreko_motorra_frenatu(Kotxea *kotxea)
 	kotxea->mot_ezkerra.azeleratu = false;
 	kotxea->mot_ezkerra.potentzia_balioa -= (kotxea->mot_ezkerra.potentzia_balioa > 0) ? kotxea->interbaloa : 0;
 
+	// if (kotxea->mot_ezkerra.potentzia_balioa > 0)
+	// {
+	// 	kotxea->mot_ezkerra.potentzia_balioa -= kotxea->interbaloa;
+	// }
+	// else
+	// {
+	// 	kotxea->mot_ezkerra.potentzia_balioa -= 0;
+	// }
+	
+	
+
 #ifdef RASPBERRY
 	hardware_ezkerreko_motorra_potentzia(kotxea->mot_ezkerra.potentzia_balioa);
 #endif
