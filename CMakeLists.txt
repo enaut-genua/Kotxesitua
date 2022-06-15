@@ -4,7 +4,7 @@ cmake_minimum_required(VERSION 3.16.0)
 #add_subdirectory(mapa_sortzailea)
 
 # Konpilazio gurutzatua aktibatu edo desaktibatzen duen interruptorea (ON/OFF). Automatikoki itzalita (OFF).
-option(KONP_GURUTZ "Konpilazio gurutzatua Raspberry Pi-rako" ON)
+option(KONP_GURUTZ "Konpilazio gurutzatua Raspberry Pi-rako" OFF)
 
 # Konfiguratu konpilazio gurutzatua.
 if(KONP_GURUTZ)

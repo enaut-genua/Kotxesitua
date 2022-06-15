@@ -168,8 +168,8 @@ bool kotxea_marra_jarraitu(void)
 bool kotxea_mapa(void)
 {
 	// Hemen dijsktra jun behar da
-	int tamaina = 1;
-	Norabidea *norab = dijkstra_main(&tamaina);
+	int tamainaa = 0;
+	Norabidea *norab = dijkstra_main(&tamainaa);
 
 	Kotxea kotxea = {
 		.potentzia_limitea = 100,
@@ -183,7 +183,7 @@ bool kotxea_mapa(void)
 		return false;
 	}
 
-	for (int i = 0; i < tamaina; i++)
+	for (int i = 0; i < tamainaa; i++)
 	{
 		// Marra zuzena, nodo bat aurkitu arte
 		while (kotxea_nodo_aurkitu() == false)
