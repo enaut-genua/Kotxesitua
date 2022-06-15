@@ -1,1 +1,10 @@
 // Defentsako apunteak
+
+// main.c-an aktibazio kodeak ordenean daude goitik behera, (goian urruneko kontrola) (erdian, lerroa jarraitu) (behean, dijkstra)
+
+//Raspberry-rako programatzea eskatzen badute src-kanpo aurkitzen den CMakeLists-ean aurkitzen den switch-a ON jarri
+
+//Artxibo berri bat egiterako kasuan, src-BARRUAN aurkitzen den CMakeLists barruan .c eta .h denak gehitu.
+
+//El binario esta dentro de build -> kotxesitua
+
