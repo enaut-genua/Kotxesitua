@@ -50,6 +50,7 @@ PATH *dijkstra(int **matrizea, int erpin_kopurua, int hasierako_puntua, int buka
 		count++;
 	}
 	int *instrukzio_bidea = (int *)calloc(tamaina + 1, sizeof(int));
+	int tmp = 1;
 	if (instrukzio_bidea)
 	{
 		// guarda el camino en un array
@@ -58,7 +59,6 @@ PATH *dijkstra(int **matrizea, int erpin_kopurua, int hasierako_puntua, int buka
 			egindako_bidea[bukaerako_puntua] = bukaerako_puntua;
 			j = bukaerako_puntua;
 			instrukzio_bidea[0] = bukaerako_puntua;
-			int tmp = 1;
 			do
 			{
 				if (tmp > tamaina)
@@ -72,7 +72,7 @@ PATH *dijkstra(int **matrizea, int erpin_kopurua, int hasierako_puntua, int buka
 		}
 	}
 	camino->path = instrukzio_bidea;
-	camino->tamaina = tamaina;
+	camino->tamaina = tmp;
 	return camino; // se devuelve la estructura con el camino y el tama�o de puntos recorridos
 }
 int *dijkstra_bidea_pausoka(int tamaina, int **matrize_orientazioa, int *bidea)
