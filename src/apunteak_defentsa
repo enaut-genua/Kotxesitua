@@ -6,5 +6,7 @@
 
 //Artxibo berri bat egiterako kasuan, src-BARRUAN aurkitzen den CMakeLists barruan .c eta .h denak gehitu.
 
-//El binario esta dentro de build -> kotxesitua
+//El binario esta dentro de build -> kotxesituaç
+
+//SI se peta todo y se desconfigura ctrl+shf+P -> reload
 
